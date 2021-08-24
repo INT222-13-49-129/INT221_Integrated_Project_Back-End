@@ -1,27 +1,24 @@
 package sit.int222.cfan.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
 
+import javax.persistence.*;
+
+@Entity
+@Data
 public class Foodtypereq {
 
+  @Id
+  @Column(name = "Request_Requestid")
+  private Long requestRequestid;
+
   private String typename;
-  private long requestRequestid;
 
-
-  public String getTypename() {
-    return typename;
-  }
-
-  public void setTypename(String typename) {
-    this.typename = typename;
-  }
-
-
-  public long getRequestRequestid() {
-    return requestRequestid;
-  }
-
-  public void setRequestRequestid(long requestRequestid) {
-    this.requestRequestid = requestRequestid;
-  }
+  @JsonBackReference
+  @OneToOne
+  @MapsId
+  @JoinColumn(name = "Request_Requestid")
+  private Request request;
 
 }

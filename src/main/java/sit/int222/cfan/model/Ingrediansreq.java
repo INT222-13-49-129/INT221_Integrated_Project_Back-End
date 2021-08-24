@@ -1,67 +1,31 @@
 package sit.int222.cfan.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
 
+import javax.persistence.*;
+
+@Entity
+@Data
 public class Ingrediansreq {
+
+  @Id
+  @Column(name = "Request_Requestid")
+  private Long requestRequestid;
 
   private String ingradianname;
   private long kcalpunit;
   private String unit;
   private String descriptionunit;
-  private String ingrediantype;
-  private long requestRequestid;
 
+  @Column(columnDefinition = "ENUM('Oil', 'Carb', 'Meat', 'Vegetable', 'Fruit', 'Condiment')")
+  @Enumerated(EnumType.STRING)
+  private IngredianType ingrediantype;
 
-  public String getIngradianname() {
-    return ingradianname;
-  }
-
-  public void setIngradianname(String ingradianname) {
-    this.ingradianname = ingradianname;
-  }
-
-
-  public long getKcalpunit() {
-    return kcalpunit;
-  }
-
-  public void setKcalpunit(long kcalpunit) {
-    this.kcalpunit = kcalpunit;
-  }
-
-
-  public String getUnit() {
-    return unit;
-  }
-
-  public void setUnit(String unit) {
-    this.unit = unit;
-  }
-
-
-  public String getDescriptionunit() {
-    return descriptionunit;
-  }
-
-  public void setDescriptionunit(String descriptionunit) {
-    this.descriptionunit = descriptionunit;
-  }
-
-
-  public String getIngrediantype() {
-    return ingrediantype;
-  }
-
-  public void setIngrediantype(String ingrediantype) {
-    this.ingrediantype = ingrediantype;
-  }
-
-
-  public long getRequestRequestid() {
-    return requestRequestid;
-  }
-
-  public void setRequestRequestid(long requestRequestid) {
-    this.requestRequestid = requestRequestid;
-  }
+  @JsonBackReference
+  @OneToOne
+  @MapsId
+  @JoinColumn(name = "Request_Requestid")
+  private Request request;
 
 }

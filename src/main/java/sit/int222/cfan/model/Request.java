@@ -1,37 +1,33 @@
 package sit.int222.cfan.model;
 
+import lombok.Data;
 
+import javax.persistence.*;
+
+@Entity
+@Data
 public class Request {
 
-  private long requestid;
-  private String status;
-  private long userUserid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long requestid;
 
+    @Column(columnDefinition = "ENUM('WAIT', 'APPROVE', 'DISAPPROVED')")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
-  public long getRequestid() {
-    return requestid;
-  }
+    @ManyToOne
+    private User user;
 
-  public void setRequestid(long requestid) {
-    this.requestid = requestid;
-  }
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Ingrediansreq ingrediansreq;
 
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Foodtypereq foodtypereq;
 
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-
-  public long getUserUserid() {
-    return userUserid;
-  }
-
-  public void setUserUserid(long userUserid) {
-    this.userUserid = userUserid;
-  }
-
+    public enum Status {
+        WAIT, APPROVE, DISAPPROVED
+    }
 }

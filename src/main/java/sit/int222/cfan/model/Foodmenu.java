@@ -1,5 +1,6 @@
 package sit.int222.cfan.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -28,6 +29,10 @@ public class Foodmenu {
 
   @OneToMany(mappedBy = "foodmenu")
   List<FoodmenuHasIngredians> foodmenuHasIngrediansList;
+
+  @JsonBackReference
+  @OneToMany(mappedBy = "foodmenu")
+  List<MealHasFoodmenu> mealHasFoodmenuList;
 
   public enum FoodmenuStatus {
     PUBLISH,PERSONAL

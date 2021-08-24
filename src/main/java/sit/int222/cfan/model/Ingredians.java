@@ -26,7 +26,4 @@ public class Ingredians {
     @OneToMany(mappedBy = "ingredians")
     List<FoodmenuHasIngredians> foodmenuHasIngrediansList;
 
-    public enum IngredianType {
-        Oil, Carb, Meat, Vegetable, Fruit, Condiment
-    }
 }
