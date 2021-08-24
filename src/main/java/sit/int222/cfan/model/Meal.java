@@ -16,7 +16,7 @@ public class Meal {
     @Column(columnDefinition = "ENUM('Breakfast', 'Lunch', 'Dinner', 'Lightmeal')")
     @Enumerated(EnumType.STRING)
     private MealTime mealtime;
-    private java.sql.Date dateMeal;
+    private java.sql.Date datemeal;
     private long totalkcal;
 
     @ManyToOne

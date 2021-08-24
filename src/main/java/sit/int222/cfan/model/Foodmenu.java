@@ -14,7 +14,7 @@ public class Foodmenu {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long foodmenuid;
   private String foodname;
-  private long totalkal;
+  private long totalkcal;
   private String image;
   private String description;
 

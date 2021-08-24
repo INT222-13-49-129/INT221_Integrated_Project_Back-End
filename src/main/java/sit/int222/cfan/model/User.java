@@ -41,6 +41,10 @@ public class User {
   @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
   private List<Meal> meals;
 
+  @JsonBackReference
+  @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+  private List<Request> requests;
+
   public enum Gender {
     M,F,
   }
