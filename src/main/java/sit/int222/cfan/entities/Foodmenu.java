@@ -1,4 +1,4 @@
-package sit.int222.cfan.model;
+package sit.int222.cfan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.List;
 public class Foodmenu {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue
   private long foodmenuid;
   private String foodname;
   private long totalkcal;
@@ -24,6 +24,8 @@ public class Foodmenu {
 
   @ManyToOne
   private Foodtype foodtype;
+
+  @JsonBackReference
   @ManyToOne
   private User user;
 

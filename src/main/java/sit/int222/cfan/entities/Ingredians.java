@@ -1,4 +1,4 @@
-package sit.int222.cfan.model;
+package sit.int222.cfan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.List;
 public class Ingredians {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private long ingradiansid;
     private String ingradianname;
     private long kcalpunit;

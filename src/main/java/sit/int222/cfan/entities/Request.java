@@ -1,4 +1,4 @@
-package sit.int222.cfan.model;
+package sit.int222.cfan.entities;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class Request {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private long requestid;
 
     @Column(columnDefinition = "ENUM('WAIT', 'APPROVE', 'DISAPPROVED')")

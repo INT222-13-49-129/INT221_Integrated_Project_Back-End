@@ -1,4 +1,4 @@
-package sit.int222.cfan.model;
+package sit.int222.cfan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;

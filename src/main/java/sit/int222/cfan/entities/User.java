@@ -1,4 +1,4 @@
-package sit.int222.cfan.model;
+package sit.int222.cfan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,7 +12,7 @@ import java.util.List;
 public class User {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue
   private long userid;
   private String username;
   private String email;

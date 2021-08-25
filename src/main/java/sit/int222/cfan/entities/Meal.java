@@ -1,4 +1,4 @@
-package sit.int222.cfan.model;
+package sit.int222.cfan.entities;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public class Meal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private long mealid;
 
     @Column(columnDefinition = "ENUM('Breakfast', 'Lunch', 'Dinner', 'Lightmeal')")
