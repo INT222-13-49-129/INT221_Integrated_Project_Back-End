@@ -59,13 +59,13 @@ public class GeneralApi {
     }
 
     @GetMapping("/foodmenu/page/foodtype")
-    public Page<Foodmenu> foodmenusWithPageFoodtype (
+    public Page<Foodmenu> foodmenusWithPageFoodtype(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
             @RequestParam(defaultValue = "0") Long foodtypeId) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy) );
-        return foodmenuController.findPageFoodtypePUBLISH(foodtypeId,pageable);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        return foodmenuController.findPageFoodtypePUBLISH(foodtypeId, pageable);
     }
 
     @GetMapping("/foodmenu/{id}")

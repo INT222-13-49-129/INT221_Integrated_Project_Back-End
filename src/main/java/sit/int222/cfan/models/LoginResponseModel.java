@@ -7,9 +7,11 @@ import sit.int222.cfan.entities.User;
 public class LoginResponseModel {
     private User user;
     private boolean success;
+    private  String token;
 
-    public LoginResponseModel(boolean success,User user) {
-        this.success = success;
+    public LoginResponseModel(User user, boolean success, String token) {
         this.user = user;
+        this.success = success;
+        this.token = token;
     }
 }

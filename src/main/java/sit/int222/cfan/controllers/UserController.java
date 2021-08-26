@@ -10,6 +10,7 @@ import sit.int222.cfan.models.LoginModel;
 import sit.int222.cfan.models.LoginResponseModel;
 import sit.int222.cfan.models.RegisterModel;
 import sit.int222.cfan.repositories.UserRepository;
+import sit.int222.cfan.services.TokenService;
 
 @Service
 public class UserController {
@@ -17,6 +18,8 @@ public class UserController {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    TokenService tokenService;
 
     public LoginResponseModel register(RegisterModel registerModel) {
         if (userRepository.existsByEmail(registerModel.getEmail())) {
@@ -37,7 +40,10 @@ public class UserController {
         user.setWeight(registerModel.getWeight());
         user.setHeight(registerModel.getHeight());
         user.setStatus(User.Status.NORMAL);
-        return new LoginResponseModel(true,userRepository.save(user));
+
+        User userregis = userRepository.save(user);
+        String token = tokenService.tokenize(userregis);
+        return new LoginResponseModel(userregis,true,token);
     }
 
     public LoginResponseModel login(LoginModel loginModel) {
@@ -48,6 +54,7 @@ public class UserController {
         if(!passwordEncoder.matches(loginModel.getPassword(),user.getPassword())){
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
         }
-        return new LoginResponseModel(true,user);
+        String token = tokenService.tokenize(user);
+        return new LoginResponseModel(user,true,token);
     }
 }
