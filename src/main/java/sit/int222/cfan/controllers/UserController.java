@@ -11,6 +11,7 @@ import sit.int222.cfan.models.LoginResponseModel;
 import sit.int222.cfan.models.RegisterModel;
 import sit.int222.cfan.repositories.UserRepository;
 import sit.int222.cfan.services.TokenService;
+import sit.int222.cfan.util.SecurityUtil;
 
 @Service
 public class UserController {
@@ -20,6 +21,18 @@ public class UserController {
     PasswordEncoder passwordEncoder;
     @Autowired
     TokenService tokenService;
+
+    public User getUser() {
+        Long userid = SecurityUtil.getCurrentUserId();
+        if (userid == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_UNAUTHORIZED, "User : unauthorized !!");
+        }
+        User user = userRepository.findById(userid).orElse(null);
+        if (user==null){
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_DOES_NOT_EXIST, "User : Email {"+ userid +"} does not exist !!");
+        }
+        return user;
+    }
 
     public LoginResponseModel register(RegisterModel registerModel) {
         if (userRepository.existsByEmail(registerModel.getEmail())) {
@@ -43,18 +56,18 @@ public class UserController {
 
         User userregis = userRepository.save(user);
         String token = tokenService.tokenize(userregis);
-        return new LoginResponseModel(userregis,true,token);
+        return new LoginResponseModel(userregis, true, token);
     }
 
     public LoginResponseModel login(LoginModel loginModel) {
         User user = userRepository.findByEmail(loginModel.getEmail());
-        if(user == null){
+        if (user == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_DOES_NOT_EXIST, "User : Email {" + loginModel.getEmail() + "} does not exist !!");
         }
-        if(!passwordEncoder.matches(loginModel.getPassword(),user.getPassword())){
+        if (!passwordEncoder.matches(loginModel.getPassword(), user.getPassword())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
         }
         String token = tokenService.tokenize(user);
-        return new LoginResponseModel(user,true,token);
+        return new LoginResponseModel(user, true, token);
     }
 }

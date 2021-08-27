@@ -49,7 +49,7 @@ public class TokenFilter extends GenericFilterBean {
             return;
         }
 
-        String principal = decoded.getClaim("principal").asString();
+        Long principal = decoded.getClaim("principal").asLong();
         String role = decoded.getClaim("role").asString();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
