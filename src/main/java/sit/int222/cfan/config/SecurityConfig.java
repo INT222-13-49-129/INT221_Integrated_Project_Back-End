@@ -9,12 +9,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import sit.int222.cfan.repositories.JwtblacklistRepository;
 import sit.int222.cfan.services.TokenService;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     TokenService tokenService;
+    @Autowired
+    JwtblacklistRepository jwtblacklistRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,6 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/**").hasAnyAuthority("NORMAL","ADMIN")
                 .antMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
-                .and().apply(new TokenFilterConfiguerer(tokenService));
+                .and().apply(new TokenFilterConfiguerer(tokenService,jwtblacklistRepository));
     }
 }

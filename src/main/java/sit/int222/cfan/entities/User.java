@@ -45,6 +45,10 @@ public class User {
   @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
   private List<Request> requests;
 
+  @JsonBackReference
+  @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+  private List<Jwtblacklist> jwtblacklists;
+
   public enum Gender {
     M,F,
   }

@@ -1,22 +1,32 @@
 package sit.int222.cfan.controllers;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sit.int222.cfan.entities.Jwtblacklist;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
 import sit.int222.cfan.models.LoginModel;
 import sit.int222.cfan.models.LoginResponseModel;
 import sit.int222.cfan.models.RegisterModel;
+import sit.int222.cfan.repositories.JwtblacklistRepository;
 import sit.int222.cfan.repositories.UserRepository;
 import sit.int222.cfan.services.TokenService;
 import sit.int222.cfan.util.SecurityUtil;
+
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UserController {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    JwtblacklistRepository jwtblacklistRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
@@ -69,5 +79,32 @@ public class UserController {
         }
         String token = tokenService.tokenize(user);
         return new LoginResponseModel(user, true, token);
+    }
+
+    public Map<String, Boolean> logout(){
+        User user  = getUser();
+        String token = SecurityUtil.getToken();
+
+        if (token == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_UNAUTHORIZED, "User : unauthorized !!");
+        }
+
+        DecodedJWT decoded = tokenService.verify(token);
+        if (decoded == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_UNAUTHORIZED, "User : unauthorized !!");
+        }
+        Date date = decoded.getClaim("exp").asDate();
+        Timestamp exp = new Timestamp(date.getTime());
+        if (decoded == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_UNAUTHORIZED, "User : unauthorized !!");
+        }
+        Jwtblacklist jwtblacklist = new Jwtblacklist();
+        jwtblacklist.setToken(token);
+        jwtblacklist.setExp(exp);
+        jwtblacklist.setUser(user);
+        jwtblacklistRepository.save(jwtblacklist);
+        HashMap<String, Boolean> map = new HashMap<>();
+        map.put("success", true);
+        return map;
     }
 }

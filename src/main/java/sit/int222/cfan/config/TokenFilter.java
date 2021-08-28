@@ -1,6 +1,7 @@
 package sit.int222.cfan.config;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,6 +9,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.GenericFilterBean;
+import sit.int222.cfan.repositories.JwtblacklistRepository;
 import sit.int222.cfan.services.TokenService;
 
 import javax.servlet.FilterChain;
@@ -22,9 +24,11 @@ import java.util.List;
 public class TokenFilter extends GenericFilterBean {
 
     private final TokenService tokenService;
+    private final JwtblacklistRepository jwtblacklistRepository;
 
-    public TokenFilter(TokenService tokenService) {
+    public TokenFilter(TokenService tokenService, JwtblacklistRepository jwtblacklistRepository) {
         this.tokenService = tokenService;
+        this.jwtblacklistRepository = jwtblacklistRepository;
     }
 
     @Override
@@ -42,6 +46,10 @@ public class TokenFilter extends GenericFilterBean {
         }
 
         String token = authorization.substring(7);
+        if(jwtblacklistRepository.existsByToken(token)){
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
         DecodedJWT decoded = tokenService.verify(token);
 
         if (decoded == null) {
@@ -55,7 +63,7 @@ public class TokenFilter extends GenericFilterBean {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(role));
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "(protected)", authorities);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, token, authorities);
 
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
