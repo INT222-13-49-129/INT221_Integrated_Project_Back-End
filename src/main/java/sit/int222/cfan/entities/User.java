@@ -32,21 +32,22 @@ public class User {
   @Column(columnDefinition = "ENUM('NORMAL', 'ADMIN')")
   @Enumerated(EnumType.STRING)
   private Status status;
+  private String image;
 
   @JsonBackReference
-  @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user",orphanRemoval = true,fetch = FetchType.LAZY)
   private List<Foodmenu> foodmenus;
 
   @JsonBackReference
-  @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user",orphanRemoval = true,fetch = FetchType.LAZY)
   private List<Meal> meals;
 
   @JsonBackReference
-  @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user",orphanRemoval = true,fetch = FetchType.LAZY)
   private List<Request> requests;
 
   @JsonBackReference
-  @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user",orphanRemoval = true,fetch = FetchType.LAZY)
   private List<Jwtblacklist> jwtblacklists;
 
   public enum Gender {

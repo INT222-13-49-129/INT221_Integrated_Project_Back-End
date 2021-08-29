@@ -15,7 +15,14 @@ public class ExceptionResponse {
         USER_USERNAME_ALREADY_EXIST(2003),
         USER_EMAIL_DOES_NOT_EXIST(2004),
         USER_PASSWORD_INCORRECT(2005),
-        USER_UNAUTHORIZED(2006);
+        USER_UNAUTHORIZED(2006),
+        USER_NO_PROFILE_IMAGE(2007),
+        USER_INCORRECT_ID(2008),
+        USER_EMAIL_INCORRECT(2009),
+        USER_USERNAME_INCORRECT(2010),
+
+        FILE_SUBMITTED_NOT_FOUND(3001),
+        FILE_CAN_NOT_SAVE(3002);
         private int value;
         ERROR_CODE(int value) {
             this.value = value;

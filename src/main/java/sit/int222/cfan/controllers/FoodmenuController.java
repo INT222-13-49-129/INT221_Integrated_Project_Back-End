@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sit.int222.cfan.entities.Foodmenu;
+import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
 import sit.int222.cfan.repositories.FoodmenuRepository;
@@ -43,4 +44,27 @@ public class FoodmenuController {
         return foodmenu;
     }
 
+    public List<Foodmenu> findFoodmenusUser(User user){
+        return foodmenuRepository.findAllByUser(user);
+    }
+
+    public Page<Foodmenu> findPageUser(User user,Pageable pageable){
+        return foodmenuRepository.findAllByUser(user,pageable);
+    }
+
+    public Page<Foodmenu> findPageSearchUser(User user,String search,Pageable pageable){
+        return foodmenuRepository.findAllByFoodnameContainingOrDescriptionContainingAndUser(user,search,pageable);
+    }
+
+    public Page<Foodmenu> findPageFoodtypeUser(User user,long foodtypeId,Pageable pageable){
+        return foodmenuRepository.findAllByFoodtypeIdUser(user,foodtypeId,pageable);
+    }
+
+    public Foodmenu findByIdUser(User user,long id){
+        Foodmenu foodmenu = foodmenuRepository.findByUserAndFoodmenuid(user,id);
+        if(foodmenu == null){
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_DOES_NOT_EXIST,"Foodmenu : id {"+id+"} does not exist !!");
+        }
+        return foodmenu;
+    }
 }

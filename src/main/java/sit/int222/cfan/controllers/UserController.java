@@ -2,20 +2,23 @@ package sit.int222.cfan.controllers;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import sit.int222.cfan.entities.Jwtblacklist;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
-import sit.int222.cfan.models.LoginModel;
-import sit.int222.cfan.models.LoginResponseModel;
-import sit.int222.cfan.models.RegisterModel;
+import sit.int222.cfan.models.*;
 import sit.int222.cfan.repositories.JwtblacklistRepository;
 import sit.int222.cfan.repositories.UserRepository;
+import sit.int222.cfan.services.StorageService;
 import sit.int222.cfan.services.TokenService;
 import sit.int222.cfan.util.SecurityUtil;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +34,8 @@ public class UserController {
     PasswordEncoder passwordEncoder;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    StorageService storageService;
 
     public User getUser() {
         Long userid = SecurityUtil.getCurrentUserId();
@@ -103,6 +108,102 @@ public class UserController {
         jwtblacklist.setExp(exp);
         jwtblacklist.setUser(user);
         jwtblacklistRepository.save(jwtblacklist);
+        HashMap<String, Boolean> map = new HashMap<>();
+        map.put("success", true);
+        return map;
+    }
+
+    public Map<String, Object> addImgProfile(MultipartFile fileImg){
+        User user  = getUser();
+        try {
+            if (user.getImage() != null) {
+                storageService.delete(user.getImage());
+            }
+            user.setImage(storageService.store(fileImg, String.valueOf(user.getUserid()).concat("-up")));
+            user = userRepository.save(user);
+        } catch (Exception e) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_SAVE,"File : file cannot be saved !!");
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("imge", user.getImage());
+        return map;
+    }
+
+    public Resource getImgProfile() throws IOException, URISyntaxException {
+        User user  = getUser();
+        if(user.getImage()==null){
+            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_NO_PROFILE_IMAGE,"User : id {"+ user.getUserid() +"}  does not have a profile picture !!");
+        }
+        return storageService.loadAsResource(user.getImage());
+    }
+
+    public User updateUser(UserUpdateModel userupdate){
+        User user  = getUser();
+        if(user.getUserid()!=userupdate.getUserid()){
+            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID,"User : id {"+ userupdate.getUserid() +"}  incorrect user id !!");
+        }
+        if (userRepository.existsByUsername(userupdate.getUsername()) && !userupdate.getUsername().equals(user.getUsername())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_USERNAME_ALREADY_EXIST, "User : Username {" + userupdate.getUsername() + "} already exist !!");
+        }
+        user.setUsername(userupdate.getUsername());
+        user.setFirstname(userupdate.getFirstname());
+        user.setLastname(userupdate.getLastname());
+        user.setDoB(userupdate.getDoB());
+        user.setGender(userupdate.getGender());
+        user.setWeight(userupdate.getWeight());
+        user.setHeight(userupdate.getHeight());
+        return userRepository.save(user);
+    }
+
+    public Map<String,Boolean> updateUserPassword(UserUpdatePasswordModel userpsw){
+        User user  = getUser();
+        if(user.getUserid()!=userpsw.getUserid()){
+            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID,"User : id {"+ userpsw.getUserid() +"}  incorrect user id !!");
+        }
+        if (!passwordEncoder.matches(userpsw.getOldpassword(), user.getPassword())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
+        }
+        user.setPassword(passwordEncoder.encode(userpsw.getNewpassword()));
+        userRepository.save(user);
+        HashMap<String, Boolean> map = new HashMap<>();
+        map.put("success", true);
+        return map;
+    }
+
+    public Map<String,Object> updateUserEmail(UserUpdateEmailModel useremail){
+        User user  = getUser();
+        if(user.getUserid()!=useremail.getUserid()){
+            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID,"User : id {"+ useremail.getUserid() +"}  incorrect user id !!");
+        }
+        if (userRepository.existsByEmail(useremail.getEmail())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_ALREADY_EXIST, "User : Email {" + useremail.getEmail() + "} already exist !!");
+        }
+        if (!passwordEncoder.matches(useremail.getPassword(), user.getPassword())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
+        }
+        user.setEmail(useremail.getEmail());
+        user = userRepository.save(user);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("email", user.getEmail());
+        return map;
+    }
+    public Map<String,Boolean> deleteUser(DeleteUserModel deleteuser){
+        User user  = getUser();
+        if(user.getUserid()!=deleteuser.getUserid()){
+            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID,"User : id {"+ deleteuser.getUserid() +"}  incorrect user id !!");
+        }
+        if (!user.getEmail().equals(deleteuser.getEmail())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_INCORRECT, "User : Email {" + deleteuser.getEmail() + "} incorrect!!");
+        }
+        if (!user.getUsername().equals(deleteuser.getUsername())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_USERNAME_INCORRECT, "User : Username {" + deleteuser.getUsername() + "} incorrect!!");
+        }
+        if (!passwordEncoder.matches(deleteuser.getPassword(), user.getPassword())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
+        }
+        userRepository.delete(user);
         HashMap<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return map;
