@@ -9,17 +9,17 @@ import javax.persistence.*;
 public class MealHasFoodmenu {
 
   @EmbeddedId
-  MealHasFoodmenuKey key;
+  private MealHasFoodmenuKey key;
 
   @ManyToOne
   @MapsId("mealMealid")
   @JoinColumn(name = "Meal_Mealid")
-  Meal meal;
+  private Meal meal;
 
   @ManyToOne
   @MapsId("foodmenuFoodmenuid")
   @JoinColumn(name = "Foodmenu_Foodmenuid")
-  Foodmenu foodmenu;
+  private Foodmenu foodmenu;
 
   private long totaldish;
   private long totalkcal;

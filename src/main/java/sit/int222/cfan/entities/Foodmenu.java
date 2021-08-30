@@ -25,16 +25,16 @@ public class Foodmenu {
   @ManyToOne
   private Foodtype foodtype;
 
-  @JsonBackReference
+  @JsonBackReference(value = "user")
   @ManyToOne
   private User user;
 
   @OneToMany(mappedBy = "foodmenu")
-  List<FoodmenuHasIngredians> foodmenuHasIngrediansList;
+  private List<FoodmenuHasIngredians> foodmenuHasIngrediansList;
 
-  @JsonBackReference
+  @JsonBackReference(value = "mealHasFoodmenuList")
   @OneToMany(mappedBy = "foodmenu")
-  List<MealHasFoodmenu> mealHasFoodmenuList;
+  private List<MealHasFoodmenu> mealHasFoodmenuList;
 
   public enum FoodmenuStatus {
     PUBLISH,PERSONAL

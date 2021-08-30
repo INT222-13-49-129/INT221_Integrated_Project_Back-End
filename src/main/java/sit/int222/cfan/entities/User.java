@@ -34,19 +34,19 @@ public class User {
   private Status status;
   private String image;
 
-  @JsonBackReference
+  @JsonBackReference(value = "foodmenus")
   @OneToMany(mappedBy = "user",orphanRemoval = true,fetch = FetchType.LAZY)
   private List<Foodmenu> foodmenus;
 
-  @JsonBackReference
+  @JsonBackReference(value = "meals")
   @OneToMany(mappedBy = "user",orphanRemoval = true,fetch = FetchType.LAZY)
   private List<Meal> meals;
 
-  @JsonBackReference
+  @JsonBackReference(value = "requests")
   @OneToMany(mappedBy = "user",orphanRemoval = true,fetch = FetchType.LAZY)
   private List<Request> requests;
 
-  @JsonBackReference
+  @JsonBackReference(value = "jwtblacklists")
   @OneToMany(mappedBy = "user",orphanRemoval = true,fetch = FetchType.LAZY)
   private List<Jwtblacklist> jwtblacklists;
 

@@ -10,18 +10,18 @@ import javax.persistence.*;
 public class FoodmenuHasIngredians {
 
   @EmbeddedId
-  FoodmenuHasIngrediansKey key;
+  private FoodmenuHasIngrediansKey key;
 
-  @JsonBackReference
+  @JsonBackReference(value="foodmenuHasIngrediansList")
   @ManyToOne
   @MapsId("foodmenuFoodmenuid")
   @JoinColumn(name = "Foodmenu_Foodmenuid")
-  Foodmenu foodmenu;
+  private Foodmenu foodmenu;
 
   @ManyToOne
   @MapsId("ingrediansIngradiansid")
   @JoinColumn(name = "Ingredians_Ingradiansid")
-  Ingredians ingredians;
+  private Ingredians ingredians;
 
   private long totalunit;
   private long totalkcal;

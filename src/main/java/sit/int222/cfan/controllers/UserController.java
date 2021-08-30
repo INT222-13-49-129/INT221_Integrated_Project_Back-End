@@ -119,7 +119,8 @@ public class UserController {
             if (user.getImage() != null) {
                 storageService.delete(user.getImage());
             }
-            user.setImage(storageService.store(fileImg, String.valueOf(user.getUserid()).concat("-up")));
+            String s = "UP-";
+            user.setImage(storageService.store(fileImg, s.concat(String.valueOf(user.getUserid()))));
             user = userRepository.save(user);
         } catch (Exception e) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_SAVE,"File : file cannot be saved !!");

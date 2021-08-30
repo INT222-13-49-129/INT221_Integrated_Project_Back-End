@@ -14,7 +14,7 @@ public class Foodtype {
   private long foodtypeid;
   private String typename;
 
-  @JsonBackReference
+  @JsonBackReference(value = "foodtype")
   @OneToMany(mappedBy = "foodtype",fetch = FetchType.LAZY)
   private List<Foodmenu> foodmenus;
 

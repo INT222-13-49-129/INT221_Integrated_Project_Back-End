@@ -33,4 +33,9 @@ public interface FoodmenuRepository extends JpaRepository<Foodmenu, Long> {
     Page<Foodmenu> findAllByFoodtypeIdUser(User user,Long foodtypeId,Pageable pageable);
 
     Foodmenu findByUserAndFoodmenuid(User user,Long id);
+
+    Foodmenu findByFoodnameAndFoodmenustatus(String foodname, Foodmenu.FoodmenuStatus foodmenuStatus);
+
+    Foodmenu findByUserAndFoodname(User user,String foodname);
+
 }

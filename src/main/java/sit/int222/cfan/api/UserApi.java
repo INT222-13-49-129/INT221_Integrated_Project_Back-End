@@ -16,10 +16,7 @@ import sit.int222.cfan.entities.Foodmenu;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
-import sit.int222.cfan.models.DeleteUserModel;
-import sit.int222.cfan.models.UserUpdateEmailModel;
-import sit.int222.cfan.models.UserUpdateModel;
-import sit.int222.cfan.models.UserUpdatePasswordModel;
+import sit.int222.cfan.models.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -112,7 +109,15 @@ public class UserApi {
     }
 
     @GetMapping("/foodmenu/{id}")
-    public Foodmenu product(@PathVariable Long id) {
+    public Foodmenu foodmenu(@PathVariable Long id) {
         return foodmenuController.findByIdUser(userController.getUser(),id);
+    }
+
+    @PostMapping(value = "/foodmenu/add",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Foodmenu createFoodmenu(@RequestParam(value = "file",required = false) MultipartFile fileImg,@RequestPart Foodmenu newfoodmenu) {
+        if(fileImg == null){
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_SUBMITTED_NOT_FOUND,"File : submitted file was not found");
+        }
+        return foodmenuController.createFoodmenu(userController.getUser(),fileImg,newfoodmenu);
     }
 }

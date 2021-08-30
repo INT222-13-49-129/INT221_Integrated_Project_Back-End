@@ -1,6 +1,7 @@
 package sit.int222.cfan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Ingredians {
 
     @Id
@@ -22,8 +24,8 @@ public class Ingredians {
     @Enumerated(EnumType.STRING)
     private IngredianType ingrediantype;
 
-    @JsonBackReference
+    @JsonBackReference(value = "foodmenuHasIngrediansList")
     @OneToMany(mappedBy = "ingredians")
-    List<FoodmenuHasIngredians> foodmenuHasIngrediansList;
+    private List<FoodmenuHasIngredians> foodmenuHasIngrediansList;
 
 }

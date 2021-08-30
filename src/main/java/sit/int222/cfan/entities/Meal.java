@@ -23,7 +23,7 @@ public class Meal {
     private User user;
 
     @OneToMany(mappedBy = "meal")
-    List<MealHasFoodmenu> mealHasFoodmenuList;
+    private List<MealHasFoodmenu> mealHasFoodmenuList;
 
     public enum MealTime {
         Breakfast, Lunch, Dinner, Lightmeal
