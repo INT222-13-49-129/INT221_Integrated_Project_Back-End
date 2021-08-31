@@ -33,7 +33,7 @@ public class Foodmenu {
   private List<FoodmenuHasIngredians> foodmenuHasIngrediansList;
 
   @JsonBackReference(value = "mealHasFoodmenuList")
-  @OneToMany(mappedBy = "foodmenu")
+  @OneToMany(mappedBy = "foodmenu",orphanRemoval = true)
   private List<MealHasFoodmenu> mealHasFoodmenuList;
 
   public enum FoodmenuStatus {

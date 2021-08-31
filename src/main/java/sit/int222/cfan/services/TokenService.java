@@ -25,7 +25,7 @@ public class TokenService {
 
     public String tokenize(User user) {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, 60);
+        calendar.add(Calendar.MINUTE, 60*24);
         Date expiresAt = calendar.getTime();
 
         return JWT.create()

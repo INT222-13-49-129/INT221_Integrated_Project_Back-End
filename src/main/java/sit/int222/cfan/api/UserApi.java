@@ -11,12 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sit.int222.cfan.controllers.FoodmenuController;
+import sit.int222.cfan.controllers.MealController;
 import sit.int222.cfan.controllers.UserController;
 import sit.int222.cfan.entities.Foodmenu;
+import sit.int222.cfan.entities.Meal;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
-import sit.int222.cfan.models.*;
+import sit.int222.cfan.models.DeleteUserModel;
+import sit.int222.cfan.models.UserUpdateEmailModel;
+import sit.int222.cfan.models.UserUpdateModel;
+import sit.int222.cfan.models.UserUpdatePasswordModel;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -30,6 +35,8 @@ public class UserApi {
     private UserController userController;
     @Autowired
     private FoodmenuController foodmenuController;
+    @Autowired
+    private MealController mealController;
 
     @GetMapping("")
     public User user() {
@@ -37,20 +44,20 @@ public class UserApi {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Map> logout(){
+    public ResponseEntity<Map> logout() {
         return ResponseEntity.ok(userController.logout());
     }
 
-    @PostMapping(value = "/addimgprofile",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Map> addImgProfile(@RequestParam(value = "file",required = false) MultipartFile fileImg) {
-        if(fileImg == null){
-            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_SUBMITTED_NOT_FOUND,"File : submitted file was not found");
+    @PostMapping(value = "/addimgprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Map> addImgProfile(@RequestParam(value = "file", required = false) MultipartFile fileImg) {
+        if (fileImg == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_SUBMITTED_NOT_FOUND, "File : submitted file was not found");
         }
-       return ResponseEntity.ok(userController.addImgProfile(fileImg));
+        return ResponseEntity.ok(userController.addImgProfile(fileImg));
     }
 
-    @GetMapping(value = "/imgprofile",produces = MediaType.IMAGE_PNG_VALUE)
-    public Resource getImgProfile() throws IOException, URISyntaxException {
+    @GetMapping(value = "/imgprofile", produces = MediaType.IMAGE_PNG_VALUE)
+    public Resource getImgProfile() {
         return userController.getImgProfile();
     }
 
@@ -85,7 +92,7 @@ public class UserApi {
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        return foodmenuController.findPageUser(userController.getUser(),pageable);
+        return foodmenuController.findPageUser(userController.getUser(), pageable);
     }
 
     @GetMapping("/foodmenu/page/search")
@@ -95,7 +102,7 @@ public class UserApi {
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
             @RequestParam(defaultValue = "") String searchData) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        return foodmenuController.findPageSearchUser(userController.getUser(),searchData, pageable);
+        return foodmenuController.findPageSearchUser(userController.getUser(), searchData, pageable);
     }
 
     @GetMapping("/foodmenu/page/foodtype")
@@ -105,19 +112,44 @@ public class UserApi {
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
             @RequestParam(defaultValue = "0") Long foodtypeId) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        return foodmenuController.findPageFoodtypeUser(userController.getUser(),foodtypeId, pageable);
+        return foodmenuController.findPageFoodtypeUser(userController.getUser(), foodtypeId, pageable);
     }
 
     @GetMapping("/foodmenu/{id}")
     public Foodmenu foodmenu(@PathVariable Long id) {
-        return foodmenuController.findByIdUser(userController.getUser(),id);
+        return foodmenuController.findByIdUser(userController.getUser(), id);
     }
 
-    @PostMapping(value = "/foodmenu/add",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Foodmenu createFoodmenu(@RequestParam(value = "file",required = false) MultipartFile fileImg,@RequestPart Foodmenu newfoodmenu) {
-        if(fileImg == null){
-            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_SUBMITTED_NOT_FOUND,"File : submitted file was not found");
+    @PostMapping(value = "/foodmenu/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Foodmenu createFoodmenu(@RequestParam(value = "file", required = false) MultipartFile fileImg, @RequestPart Foodmenu newfoodmenu) {
+        if (fileImg == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_SUBMITTED_NOT_FOUND, "File : submitted file was not found");
         }
-        return foodmenuController.createFoodmenu(userController.getUser(),fileImg,newfoodmenu);
+        return foodmenuController.createFoodmenu(userController.getUser(), fileImg, newfoodmenu);
+    }
+
+    @PutMapping(value = "/foodmenu/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Foodmenu updateFoodmenu(@RequestParam(value = "file", required = false) MultipartFile fileImg, @RequestPart Foodmenu updatefoodmenu, @PathVariable Long id) {
+        return foodmenuController.updateFoodmenu(userController.getUser(), fileImg, updatefoodmenu, id);
+    }
+
+    @DeleteMapping("/foodmenu/delete/{id}")
+    public ResponseEntity<Map> deleteFoodmenu(@PathVariable Long id) {
+        return ResponseEntity.ok(foodmenuController.deleteFoodmenu(userController.getUser(), id));
+    }
+
+    @GetMapping(value = "/foodmenu/img/{id}", produces = MediaType.IMAGE_PNG_VALUE)
+    public Resource foodmenuImg(@PathVariable Long id) {
+        return foodmenuController.getfoodmenuImgUser(userController.getUser(),id);
+    }
+
+    @GetMapping("/meal")
+    public List<Meal> meals() {
+        return mealController.findMealsUser(userController.getUser());
+    }
+
+    @GetMapping("/meal/{id}")
+    public Meal meal(@PathVariable Long id) {
+        return mealController.findByIdUser(userController.getUser(), id);
     }
 }

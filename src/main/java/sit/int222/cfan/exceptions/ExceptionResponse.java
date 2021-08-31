@@ -24,7 +24,11 @@ public class ExceptionResponse {
         USER_USERNAME_INCORRECT(2010),
 
         FILE_SUBMITTED_NOT_FOUND(3001),
-        FILE_CAN_NOT_SAVE(3002);
+        FILE_CAN_NOT_SAVE(3002),
+        FILE_CAN_NOT_DELETE(3003),
+        FILE_NOT_FOUND(3004),
+
+        MEAL_DOES_NOT_EXIST(4001);
         private int value;
         ERROR_CODE(int value) {
             this.value = value;

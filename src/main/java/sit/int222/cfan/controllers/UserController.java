@@ -131,12 +131,16 @@ public class UserController {
         return map;
     }
 
-    public Resource getImgProfile() throws IOException, URISyntaxException {
+    public Resource getImgProfile() {
         User user  = getUser();
         if(user.getImage()==null){
             throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_NO_PROFILE_IMAGE,"User : id {"+ user.getUserid() +"}  does not have a profile picture !!");
         }
-        return storageService.loadAsResource(user.getImage());
+        try {
+            return storageService.loadAsResource(user.getImage());
+        } catch (Exception e) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_NOT_FOUND,"File : name {"+user.getImage()+"} not found !!");
+        }
     }
 
     public User updateUser(UserUpdateModel userupdate){
@@ -203,6 +207,13 @@ public class UserController {
         }
         if (!passwordEncoder.matches(deleteuser.getPassword(), user.getPassword())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
+        }
+        if(user.getImage()!=null){
+            try {
+                storageService.delete(user.getImage());
+            } catch (IOException e) {
+                throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_DELETE,"File : file cannot delete !!");
+            }
         }
         userRepository.delete(user);
         HashMap<String, Boolean> map = new HashMap<>();

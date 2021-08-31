@@ -1,10 +1,12 @@
 package sit.int222.cfan.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import sit.int222.cfan.controllers.FoodmenuController;
 import sit.int222.cfan.controllers.FoodtypeController;
@@ -69,8 +71,13 @@ public class GeneralApi {
     }
 
     @GetMapping("/foodmenu/{id}")
-    public Foodmenu product(@PathVariable Long id) {
+    public Foodmenu foodmenu(@PathVariable Long id) {
         return foodmenuController.findByIdPUBLISH(id);
+    }
+
+    @GetMapping(value = "/foodmenu/img/{id}", produces = MediaType.IMAGE_PNG_VALUE)
+    public Resource foodmenuImg(@PathVariable Long id) {
+        return foodmenuController.getfoodmenuImgPUBLISH(id);
     }
 
     @GetMapping("/ingredians")

@@ -1,6 +1,7 @@
 package sit.int222.cfan.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,9 @@ import sit.int222.cfan.repositories.FoodmenuRepository;
 import sit.int222.cfan.repositories.IngrediansRepository;
 import sit.int222.cfan.services.StorageService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.*;
 
 @Service
 public class FoodmenuController {
@@ -83,7 +84,7 @@ public class FoodmenuController {
         return foodmenu;
     }
 
-    public Foodmenu createFoodmenu(User user, MultipartFile fileImg, @RequestPart Foodmenu newfoodmenu) {
+    public Foodmenu createFoodmenu(User user, MultipartFile fileImg,Foodmenu newfoodmenu) {
         if (newfoodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PUBLISH)) {
             if (foodmenuRepository.findByFoodnameAndFoodmenustatus(newfoodmenu.getFoodname(), Foodmenu.FoodmenuStatus.PUBLISH) != null) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PUBLISH_ALREADY_EXIST, "Foodmenu :Foodname {" + newfoodmenu.getFoodname() + "} does already exist !!");
@@ -112,6 +113,49 @@ public class FoodmenuController {
         }
         return foodmenuRepository.save(foodmenu);
     }
+    public Foodmenu updateFoodmenu(User user, MultipartFile fileImg,Foodmenu updatefoodmenu,long id){
+        Foodmenu foodmenu = findByIdUser(user,id);
+        if (updatefoodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PUBLISH)) {
+            if (foodmenuRepository.findByFoodnameAndFoodmenustatus(updatefoodmenu.getFoodname(), Foodmenu.FoodmenuStatus.PUBLISH) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
+                throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PUBLISH_ALREADY_EXIST, "Foodmenu :Foodname {" + updatefoodmenu.getFoodname() + "} does already exist !!");
+            }
+        } else {
+            if (foodmenuRepository.findByUserAndFoodname(user, updatefoodmenu.getFoodname()) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
+                throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PERSONAL_ALREADY_EXIST, "Foodmenu :Foodname {" + updatefoodmenu.getFoodname() + "} does already exist !!");
+            }
+        }
+        foodmenu.setFoodname(updatefoodmenu.getFoodname());
+        foodmenu.setFoodmenustatus(updatefoodmenu.getFoodmenustatus());
+        foodmenu.setFoodtype(updatefoodmenu.getFoodtype());
+        List<FoodmenuHasIngredians> listtotalkcal = calculatetotalkcalIngredians(updatefoodmenu.getFoodmenuHasIngrediansList(),foodmenu);
+        foodmenu.setFoodmenuHasIngrediansList(listtotalkcal);
+        foodmenu.setTotalkcal(calculatetotalkcal(listtotalkcal));
+        foodmenu.setDescription(updatefoodmenu.getDescription());
+        if(fileImg != null){
+            String s = "FM-";
+            try {
+                storageService.delete(foodmenu.getImage());
+                foodmenu.setImage(storageService.store(fileImg, s.concat(String.valueOf(foodmenu.getFoodmenuid()))));
+            } catch (Exception e) {
+                throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_SAVE,"File : file cannot be saved !!");
+            }
+        }
+        return foodmenuRepository.save(foodmenu);
+    }
+
+    public Map<String,Boolean> deleteFoodmenu(User user,long id){
+        Foodmenu foodmenu = findByIdUser(user,id);
+        try {
+            foodmenuHasIngrediansRepository.deleteAll(foodmenu.getFoodmenuHasIngrediansList());
+            storageService.delete(foodmenu.getImage());
+            foodmenuRepository.delete(foodmenu);
+        } catch (IOException e) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_DELETE,"File : file cannot delete !!");
+        }
+        HashMap<String, Boolean> map = new HashMap<>();
+        map.put("success", true);
+        return map;
+    }
 
     public List<FoodmenuHasIngredians> calculatetotalkcalIngredians(List<FoodmenuHasIngredians> foodmenuHasIngrediansList,Foodmenu foodmenu) {
         List<FoodmenuHasIngredians> list = new ArrayList<>();
@@ -136,5 +180,23 @@ public class FoodmenuController {
             totalkcal += foodmenuHasIngredians.getTotalkcal();
         }
         return totalkcal;
+    }
+
+    public Resource getfoodmenuImgPUBLISH(long id)  {
+        Foodmenu foodmenu = findByIdPUBLISH(id);
+        try {
+            return storageService.loadAsResource(foodmenu.getImage());
+        } catch (Exception e) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_NOT_FOUND,"File : name {"+foodmenu.getImage()+"} not found !!");
+        }
+    }
+
+    public Resource getfoodmenuImgUser(User user,long id)  {
+        Foodmenu foodmenu = findByIdUser(user,id);
+        try {
+            return storageService.loadAsResource(foodmenu.getImage());
+        } catch (Exception e) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_NOT_FOUND,"File : name {"+foodmenu.getImage()+"} not found !!");
+        }
     }
 }

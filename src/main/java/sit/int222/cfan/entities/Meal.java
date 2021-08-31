@@ -1,5 +1,6 @@
 package sit.int222.cfan.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class Meal {
     private java.sql.Date datemeal;
     private long totalkcal;
 
+    @JsonBackReference
     @ManyToOne
     private User user;
 
