@@ -7,21 +7,21 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class FoodmenuHasIngredians {
+public class FoodmenuHasIngredients {
 
   @EmbeddedId
-  private FoodmenuHasIngrediansKey key;
+  private FoodmenuHasIngredientsKey key;
 
-  @JsonBackReference(value="foodmenuHasIngrediansList")
+  @JsonBackReference(value="foodmenuHasIngredientsList")
   @ManyToOne
   @MapsId("foodmenuFoodmenuid")
   @JoinColumn(name = "Foodmenu_Foodmenuid")
   private Foodmenu foodmenu;
 
   @ManyToOne
-  @MapsId("ingrediansIngradiansid")
-  @JoinColumn(name = "Ingredians_Ingradiansid")
-  private Ingredians ingredians;
+  @MapsId("ingredientsIngredientsid")
+  @JoinColumn(name = "Ingredients_Ingredientsid")
+  private Ingredients ingredients;
 
   private long totalunit;
   private long totalkcal;

@@ -10,22 +10,22 @@ import java.util.List;
 @Entity
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Ingredians {
+public class Ingredients {
 
     @Id
     @GeneratedValue
-    private long ingradiansid;
-    private String ingradianname;
+    private long ingredientsid;
+    private String ingredientsname;
     private long kcalpunit;
     private String unit;
     private String descriptionunit;
 
     @Column(columnDefinition = "ENUM('Oil', 'Carb', 'Meat', 'Vegetable', 'Fruit', 'Condiment')")
     @Enumerated(EnumType.STRING)
-    private IngredianType ingrediantype;
+    private IngredientsType ingredientstype;
 
-    @JsonBackReference(value = "foodmenuHasIngrediansList")
-    @OneToMany(mappedBy = "ingredians")
-    private List<FoodmenuHasIngredians> foodmenuHasIngrediansList;
+    @JsonBackReference(value = "foodmenuHasIngredientsList")
+    @OneToMany(mappedBy = "ingredients")
+    private List<FoodmenuHasIngredients> foodmenuHasIngredientsList;
 
 }

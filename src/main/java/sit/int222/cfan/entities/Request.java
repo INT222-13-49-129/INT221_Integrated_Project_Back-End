@@ -21,7 +21,7 @@ public class Request {
 
     @OneToOne(mappedBy = "request", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private Ingrediansreq ingrediansreq;
+    private Ingredientsreq ingredientsreq;
 
     @OneToOne(mappedBy = "request", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn

@@ -5,20 +5,18 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import sit.int222.cfan.entities.Foodmenu;
-import sit.int222.cfan.entities.FoodmenuHasIngredians;
+import sit.int222.cfan.entities.FoodmenuHasIngredients;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
-import sit.int222.cfan.repositories.FoodmenuHasIngrediansRepository;
+import sit.int222.cfan.repositories.FoodmenuHasIngredientsRepository;
 import sit.int222.cfan.repositories.FoodmenuRepository;
-import sit.int222.cfan.repositories.IngrediansRepository;
+import sit.int222.cfan.repositories.IngredientsRepository;
 import sit.int222.cfan.services.StorageService;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 
 @Service
@@ -26,9 +24,9 @@ public class FoodmenuController {
     @Autowired
     private FoodmenuRepository foodmenuRepository;
     @Autowired
-    private FoodmenuHasIngrediansRepository foodmenuHasIngrediansRepository;
+    private FoodmenuHasIngredientsRepository foodmenuHasIngredientsRepository;
     @Autowired
-    private IngrediansRepository ingrediansRepository;
+    private IngredientsRepository ingredientsRepository;
     @Autowired
     StorageService storageService;
 
@@ -100,8 +98,8 @@ public class FoodmenuController {
         foodmenu.setFoodtype(newfoodmenu.getFoodtype());
         foodmenu = foodmenuRepository.save(foodmenu);
         try {
-        List<FoodmenuHasIngredians> listtotalkcal = calculatetotalkcalIngredians(newfoodmenu.getFoodmenuHasIngrediansList(),foodmenu);
-        foodmenu.setFoodmenuHasIngrediansList(listtotalkcal);
+        List<FoodmenuHasIngredients> listtotalkcal = calculatetotalkcalIngredients(newfoodmenu.getFoodmenuHasIngredientsList(),foodmenu);
+        foodmenu.setFoodmenuHasIngredientsList(listtotalkcal);
         foodmenu.setTotalkcal(calculatetotalkcal(listtotalkcal));
         foodmenu.setDescription(newfoodmenu.getDescription());
         foodmenu.setUser(user);
@@ -127,8 +125,8 @@ public class FoodmenuController {
         foodmenu.setFoodname(updatefoodmenu.getFoodname());
         foodmenu.setFoodmenustatus(updatefoodmenu.getFoodmenustatus());
         foodmenu.setFoodtype(updatefoodmenu.getFoodtype());
-        List<FoodmenuHasIngredians> listtotalkcal = calculatetotalkcalIngredians(updatefoodmenu.getFoodmenuHasIngrediansList(),foodmenu);
-        foodmenu.setFoodmenuHasIngrediansList(listtotalkcal);
+        List<FoodmenuHasIngredients> listtotalkcal = calculatetotalkcalIngredients(updatefoodmenu.getFoodmenuHasIngredientsList(),foodmenu);
+        foodmenu.setFoodmenuHasIngredientsList(listtotalkcal);
         foodmenu.setTotalkcal(calculatetotalkcal(listtotalkcal));
         foodmenu.setDescription(updatefoodmenu.getDescription());
         if(fileImg != null){
@@ -146,7 +144,7 @@ public class FoodmenuController {
     public Map<String,Boolean> deleteFoodmenu(User user,long id){
         Foodmenu foodmenu = findByIdUser(user,id);
         try {
-            foodmenuHasIngrediansRepository.deleteAll(foodmenu.getFoodmenuHasIngrediansList());
+            foodmenuHasIngredientsRepository.deleteAll(foodmenu.getFoodmenuHasIngredientsList());
             storageService.delete(foodmenu.getImage());
             foodmenuRepository.delete(foodmenu);
         } catch (IOException e) {
@@ -157,27 +155,27 @@ public class FoodmenuController {
         return map;
     }
 
-    public List<FoodmenuHasIngredians> calculatetotalkcalIngredians(List<FoodmenuHasIngredians> foodmenuHasIngrediansList,Foodmenu foodmenu) {
-        List<FoodmenuHasIngredians> list = new ArrayList<>();
-        ListIterator<FoodmenuHasIngredians> iterator = foodmenuHasIngrediansList.listIterator();
+    public List<FoodmenuHasIngredients> calculatetotalkcalIngredients(List<FoodmenuHasIngredients> foodmenuHasIngredientsList, Foodmenu foodmenu) {
+        List<FoodmenuHasIngredients> list = new ArrayList<>();
+        ListIterator<FoodmenuHasIngredients> iterator = foodmenuHasIngredientsList.listIterator();
         while (iterator.hasNext()) {
-            FoodmenuHasIngredians foodmenuHasIngredians = iterator.next();
-            foodmenuHasIngredians.setFoodmenu(foodmenu);
-            foodmenuHasIngredians.setIngredians(ingrediansRepository.getById(foodmenuHasIngredians.getKey().getIngrediansIngradiansid()));
-            foodmenuHasIngredians.getKey().setFoodmenuFoodmenuid(foodmenu.getFoodmenuid());
-            long totalkcal = foodmenuHasIngredians.getIngredians().getKcalpunit() * foodmenuHasIngredians.getTotalunit();
-            foodmenuHasIngredians.setTotalkcal(totalkcal);
-            list.add(foodmenuHasIngrediansRepository.save(foodmenuHasIngredians));
+            FoodmenuHasIngredients foodmenuHasIngredients = iterator.next();
+            foodmenuHasIngredients.setFoodmenu(foodmenu);
+            foodmenuHasIngredients.setIngredients(ingredientsRepository.getById(foodmenuHasIngredients.getKey().getIngredientsIngredientsid()));
+            foodmenuHasIngredients.getKey().setFoodmenuFoodmenuid(foodmenu.getFoodmenuid());
+            long totalkcal = foodmenuHasIngredients.getIngredients().getKcalpunit() * foodmenuHasIngredients.getTotalunit();
+            foodmenuHasIngredients.setTotalkcal(totalkcal);
+            list.add(foodmenuHasIngredientsRepository.save(foodmenuHasIngredients));
         }
         return list;
     }
 
-    public long calculatetotalkcal(List<FoodmenuHasIngredians> foodmenuHasIngrediansList){
+    public long calculatetotalkcal(List<FoodmenuHasIngredients> foodmenuHasIngredientsList){
         long totalkcal = 0;
-        ListIterator<FoodmenuHasIngredians> iterator = foodmenuHasIngrediansList.listIterator();
+        ListIterator<FoodmenuHasIngredients> iterator = foodmenuHasIngredientsList.listIterator();
         while (iterator.hasNext()) {
-            FoodmenuHasIngredians foodmenuHasIngredians = iterator.next();
-            totalkcal += foodmenuHasIngredians.getTotalkcal();
+            FoodmenuHasIngredients foodmenuHasIngredients = iterator.next();
+            totalkcal += foodmenuHasIngredients.getTotalkcal();
         }
         return totalkcal;
     }

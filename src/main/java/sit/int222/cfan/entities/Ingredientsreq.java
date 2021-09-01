@@ -7,20 +7,20 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class Ingrediansreq {
+public class Ingredientsreq {
 
   @Id
   @Column(name = "Request_Requestid")
   private Long requestRequestid;
 
-  private String ingradianname;
+  private String ingredientsname;
   private long kcalpunit;
   private String unit;
   private String descriptionunit;
 
   @Column(columnDefinition = "ENUM('Oil', 'Carb', 'Meat', 'Vegetable', 'Fruit', 'Condiment')")
   @Enumerated(EnumType.STRING)
-  private IngredianType ingrediantype;
+  private IngredientsType ingredientstype;
 
   @JsonBackReference
   @OneToOne

@@ -10,11 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import sit.int222.cfan.controllers.FoodmenuController;
 import sit.int222.cfan.controllers.FoodtypeController;
-import sit.int222.cfan.controllers.IngrediansController;
+import sit.int222.cfan.controllers.IngredientsController;
 import sit.int222.cfan.controllers.UserController;
 import sit.int222.cfan.entities.Foodmenu;
 import sit.int222.cfan.entities.Foodtype;
-import sit.int222.cfan.entities.Ingredians;
+import sit.int222.cfan.entities.Ingredients;
 import sit.int222.cfan.models.LoginModel;
 import sit.int222.cfan.models.LoginResponseModel;
 import sit.int222.cfan.models.RegisterModel;
@@ -28,7 +28,7 @@ public class GeneralApi {
     private FoodmenuController foodmenuController;
 
     @Autowired
-    private IngrediansController ingrediansController;
+    private IngredientsController ingredientsController;
 
     @Autowired
     private FoodtypeController foodtypeController;
@@ -80,9 +80,9 @@ public class GeneralApi {
         return foodmenuController.getfoodmenuImgPUBLISH(id);
     }
 
-    @GetMapping("/ingredians")
-    public List<Ingredians> ingredians() {
-        return ingrediansController.findAll();
+    @GetMapping("/ingredients")
+    public List<Ingredients> ingredients() {
+        return ingredientsController.findAll();
     }
 
     @GetMapping("/foodtype")

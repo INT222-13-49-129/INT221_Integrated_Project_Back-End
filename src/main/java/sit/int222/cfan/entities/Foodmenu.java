@@ -30,7 +30,7 @@ public class Foodmenu {
   private User user;
 
   @OneToMany(mappedBy = "foodmenu")
-  private List<FoodmenuHasIngredians> foodmenuHasIngrediansList;
+  private List<FoodmenuHasIngredients> foodmenuHasIngredientsList;
 
   @JsonBackReference(value = "mealHasFoodmenuList")
   @OneToMany(mappedBy = "foodmenu",orphanRemoval = true)

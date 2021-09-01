@@ -8,10 +8,10 @@ import java.io.Serializable;
 
 @Embeddable
 @Data
-public class FoodmenuHasIngrediansKey implements Serializable{
+public class FoodmenuHasIngredientsKey implements Serializable{
 
     @Column(name = "Foodmenu_Foodmenuid")
     private long foodmenuFoodmenuid;
-    @Column(name = "Ingredians_Ingradiansid")
-    private long ingrediansIngradiansid;
+    @Column(name = "Ingredients_Ingredientsid")
+    private long ingredientsIngredientsid;
 }
