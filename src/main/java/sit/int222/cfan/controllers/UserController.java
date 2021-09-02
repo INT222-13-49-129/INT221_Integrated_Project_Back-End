@@ -44,7 +44,7 @@ public class UserController {
         }
         User user = userRepository.findById(userid).orElse(null);
         if (user==null){
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_DOES_NOT_EXIST, "User : Email {"+ userid +"} does not exist !!");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_DOES_NOT_EXIST, "User : id {"+ userid +"} does not exist !!");
         }
         return user;
     }

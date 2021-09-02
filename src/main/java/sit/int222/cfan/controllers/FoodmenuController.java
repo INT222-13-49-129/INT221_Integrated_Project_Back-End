@@ -82,6 +82,17 @@ public class FoodmenuController {
         return foodmenu;
     }
 
+    public Foodmenu findByIdPUBLISHorUser(User user, long id){
+        Foodmenu foodmenu = foodmenuRepository.findByUserAndFoodmenuid(user, id);
+        if (foodmenu == null) {
+            foodmenu = foodmenuRepository.findByFoodmenuidAndFoodmenustatus(id, Foodmenu.FoodmenuStatus.PUBLISH);
+            if (foodmenu == null) {
+                throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_DOES_NOT_EXIST, "Foodmenu : id {" + id + "} does not exist !!");
+            }
+        }
+        return foodmenu;
+    }
+
     public Foodmenu createFoodmenu(User user, MultipartFile fileImg,Foodmenu newfoodmenu) {
         if (newfoodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PUBLISH)) {
             if (foodmenuRepository.findByFoodnameAndFoodmenustatus(newfoodmenu.getFoodname(), Foodmenu.FoodmenuStatus.PUBLISH) != null) {
@@ -125,6 +136,7 @@ public class FoodmenuController {
         foodmenu.setFoodname(updatefoodmenu.getFoodname());
         foodmenu.setFoodmenustatus(updatefoodmenu.getFoodmenustatus());
         foodmenu.setFoodtype(updatefoodmenu.getFoodtype());
+        foodmenuHasIngredientsRepository.deleteAll(foodmenu.getFoodmenuHasIngredientsList());
         List<FoodmenuHasIngredients> listtotalkcal = calculatetotalkcalIngredients(updatefoodmenu.getFoodmenuHasIngredientsList(),foodmenu);
         foodmenu.setFoodmenuHasIngredientsList(listtotalkcal);
         foodmenu.setTotalkcal(calculatetotalkcal(listtotalkcal));

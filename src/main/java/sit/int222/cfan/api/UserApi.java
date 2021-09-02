@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ import sit.int222.cfan.models.UserUpdateEmailModel;
 import sit.int222.cfan.models.UserUpdateModel;
 import sit.int222.cfan.models.UserUpdatePasswordModel;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -140,7 +141,7 @@ public class UserApi {
 
     @GetMapping(value = "/foodmenu/img/{id}", produces = MediaType.IMAGE_PNG_VALUE)
     public Resource foodmenuImg(@PathVariable Long id) {
-        return foodmenuController.getfoodmenuImgUser(userController.getUser(),id);
+        return foodmenuController.getfoodmenuImgUser(userController.getUser(), id);
     }
 
     @GetMapping("/meal")
@@ -151,5 +152,25 @@ public class UserApi {
     @GetMapping("/meal/{id}")
     public Meal meal(@PathVariable Long id) {
         return mealController.findByIdUser(userController.getUser(), id);
+    }
+
+    @GetMapping("/meal/date/{date}")
+    public List<Meal> mealDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        return mealController.findByDateUser(userController.getUser(), Date.valueOf(date));
+    }
+
+    @PostMapping(value = "/meal/add")
+    public Meal createMeal(@RequestPart Meal newmeal) {
+        return mealController.createMeal(userController.getUser(),newmeal);
+    }
+
+    @PutMapping(value = "/meal/edit/{id}")
+    public Meal updateMeal(@RequestPart Meal updatemeal, @PathVariable Long id) {
+        return mealController.updateMeal(userController.getUser(),updatemeal, id);
+    }
+
+    @DeleteMapping("/meal/delete/{id}")
+    public ResponseEntity<Map> deleteMeal(@PathVariable Long id) {
+        return ResponseEntity.ok(mealController.deleteMeal(userController.getUser(), id));
     }
 }
