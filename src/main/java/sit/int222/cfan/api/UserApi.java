@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sit.int222.cfan.controllers.FoodmenuController;
 import sit.int222.cfan.controllers.MealController;
+import sit.int222.cfan.controllers.RequestController;
 import sit.int222.cfan.controllers.UserController;
 import sit.int222.cfan.entities.Foodmenu;
 import sit.int222.cfan.entities.Meal;
+import sit.int222.cfan.entities.Request;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
@@ -38,6 +40,8 @@ public class UserApi {
     private FoodmenuController foodmenuController;
     @Autowired
     private MealController mealController;
+    @Autowired
+    private RequestController requestController;
 
     @GetMapping("")
     public User user() {
@@ -172,5 +176,25 @@ public class UserApi {
     @DeleteMapping("/meal/delete/{id}")
     public ResponseEntity<Map> deleteMeal(@PathVariable Long id) {
         return ResponseEntity.ok(mealController.deleteMeal(userController.getUser(), id));
+    }
+
+    @GetMapping("/request")
+    public List<Request> requests() {
+        return requestController.findRequestsUser(userController.getUser());
+    }
+
+    @GetMapping("/request/{id}")
+    public Request request(@PathVariable Long id) {
+        return requestController.findByIdUser(userController.getUser(), id);
+    }
+
+    @PostMapping(value = "/request/add")
+    public Request createRequest(@RequestPart Request newrequest) {
+        return requestController.createRequest(userController.getUser(),newrequest);
+    }
+
+    @DeleteMapping("/request/delete/{id}")
+    public ResponseEntity<Map> deleteRequest(@PathVariable Long id) {
+        return ResponseEntity.ok(requestController.deleteRequest(userController.getUser(), id));
     }
 }

@@ -28,7 +28,10 @@ public class ExceptionResponse {
         FILE_CAN_NOT_DELETE(3003),
         FILE_NOT_FOUND(3004),
 
-        MEAL_DOES_NOT_EXIST(4001);
+        MEAL_DOES_NOT_EXIST(4001),
+
+        REQUEST_DOES_NOT_EXIST(5001),
+        REQUEST_SUBMITTED_NOT_FOUND(5002);;
         private int value;
         ERROR_CODE(int value) {
             this.value = value;

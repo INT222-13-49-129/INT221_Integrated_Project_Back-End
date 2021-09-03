@@ -1,5 +1,6 @@
 package sit.int222.cfan.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class Request {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @JsonBackReference("user-request")
     @ManyToOne
     private User user;
 

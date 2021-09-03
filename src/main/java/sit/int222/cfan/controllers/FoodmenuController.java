@@ -46,11 +46,11 @@ public class FoodmenuController {
         return foodmenuRepository.findSearch(Foodmenu.FoodmenuStatus.PUBLISH, search, pageable);
     }
 
-    public Page<Foodmenu> findPageFoodtypePUBLISH(long foodtypeId, Pageable pageable) {
+    public Page<Foodmenu> findPageFoodtypePUBLISH(Long foodtypeId, Pageable pageable) {
         return foodmenuRepository.findAllByFoodtypeId(Foodmenu.FoodmenuStatus.PUBLISH, foodtypeId, pageable);
     }
 
-    public Foodmenu findByIdPUBLISH(long id) {
+    public Foodmenu findByIdPUBLISH(Long id) {
         Foodmenu foodmenu = foodmenuRepository.findByFoodmenuidAndFoodmenustatus(id, Foodmenu.FoodmenuStatus.PUBLISH);
         if (foodmenu == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_DOES_NOT_EXIST, "Foodmenu : id {" + id + "} does not exist !!");
@@ -70,11 +70,11 @@ public class FoodmenuController {
         return foodmenuRepository.findAllByFoodnameContainingOrDescriptionContainingAndUser(user, search, pageable);
     }
 
-    public Page<Foodmenu> findPageFoodtypeUser(User user, long foodtypeId, Pageable pageable) {
+    public Page<Foodmenu> findPageFoodtypeUser(User user, Long foodtypeId, Pageable pageable) {
         return foodmenuRepository.findAllByFoodtypeIdUser(user, foodtypeId, pageable);
     }
 
-    public Foodmenu findByIdUser(User user, long id) {
+    public Foodmenu findByIdUser(User user, Long id) {
         Foodmenu foodmenu = foodmenuRepository.findByUserAndFoodmenuid(user, id);
         if (foodmenu == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_DOES_NOT_EXIST, "Foodmenu : id {" + id + "} does not exist !!");
@@ -82,7 +82,7 @@ public class FoodmenuController {
         return foodmenu;
     }
 
-    public Foodmenu findByIdPUBLISHorUser(User user, long id){
+    public Foodmenu findByIdPUBLISHorUser(User user, Long id){
         Foodmenu foodmenu = foodmenuRepository.findByUserAndFoodmenuid(user, id);
         if (foodmenu == null) {
             foodmenu = foodmenuRepository.findByFoodmenuidAndFoodmenustatus(id, Foodmenu.FoodmenuStatus.PUBLISH);
@@ -122,7 +122,7 @@ public class FoodmenuController {
         }
         return foodmenuRepository.save(foodmenu);
     }
-    public Foodmenu updateFoodmenu(User user, MultipartFile fileImg,Foodmenu updatefoodmenu,long id){
+    public Foodmenu updateFoodmenu(User user, MultipartFile fileImg,Foodmenu updatefoodmenu,Long id){
         Foodmenu foodmenu = findByIdUser(user,id);
         if (updatefoodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PUBLISH)) {
             if (foodmenuRepository.findByFoodnameAndFoodmenustatus(updatefoodmenu.getFoodname(), Foodmenu.FoodmenuStatus.PUBLISH) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
@@ -153,7 +153,7 @@ public class FoodmenuController {
         return foodmenuRepository.save(foodmenu);
     }
 
-    public Map<String,Boolean> deleteFoodmenu(User user,long id){
+    public Map<String,Boolean> deleteFoodmenu(User user,Long id){
         Foodmenu foodmenu = findByIdUser(user,id);
         try {
             foodmenuHasIngredientsRepository.deleteAll(foodmenu.getFoodmenuHasIngredientsList());
@@ -175,15 +175,15 @@ public class FoodmenuController {
             foodmenuHasIngredients.setFoodmenu(foodmenu);
             foodmenuHasIngredients.setIngredients(ingredientsRepository.getById(foodmenuHasIngredients.getKey().getIngredientsIngredientsid()));
             foodmenuHasIngredients.getKey().setFoodmenuFoodmenuid(foodmenu.getFoodmenuid());
-            long totalkcal = foodmenuHasIngredients.getIngredients().getKcalpunit() * foodmenuHasIngredients.getTotalunit();
+            Long totalkcal = foodmenuHasIngredients.getIngredients().getKcalpunit() * foodmenuHasIngredients.getTotalunit();
             foodmenuHasIngredients.setTotalkcal(totalkcal);
             list.add(foodmenuHasIngredientsRepository.save(foodmenuHasIngredients));
         }
         return list;
     }
 
-    public long calculatetotalkcal(List<FoodmenuHasIngredients> foodmenuHasIngredientsList){
-        long totalkcal = 0;
+    public Long calculatetotalkcal(List<FoodmenuHasIngredients> foodmenuHasIngredientsList){
+        Long totalkcal = 0L;
         ListIterator<FoodmenuHasIngredients> iterator = foodmenuHasIngredientsList.listIterator();
         while (iterator.hasNext()) {
             FoodmenuHasIngredients foodmenuHasIngredients = iterator.next();
@@ -192,7 +192,7 @@ public class FoodmenuController {
         return totalkcal;
     }
 
-    public Resource getfoodmenuImgPUBLISH(long id)  {
+    public Resource getfoodmenuImgPUBLISH(Long id)  {
         Foodmenu foodmenu = findByIdPUBLISH(id);
         try {
             return storageService.loadAsResource(foodmenu.getImage());
@@ -201,7 +201,7 @@ public class FoodmenuController {
         }
     }
 
-    public Resource getfoodmenuImgUser(User user,long id)  {
+    public Resource getfoodmenuImgUser(User user,Long id)  {
         Foodmenu foodmenu = findByIdUser(user,id);
         try {
             return storageService.loadAsResource(foodmenu.getImage());
