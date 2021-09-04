@@ -131,8 +131,7 @@ public class UserController {
         return map;
     }
 
-    public Resource getImgProfile() {
-        User user  = getUser();
+    public Resource getImgProfile(User user) {
         if(user.getImage()==null){
             throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_NO_PROFILE_IMAGE,"User : id {"+ user.getUserid() +"}  does not have a profile picture !!");
         }
@@ -143,8 +142,7 @@ public class UserController {
         }
     }
 
-    public User updateUser(UserUpdateModel userupdate){
-        User user  = getUser();
+    public User updateUser(User user,UserUpdateModel userupdate){
         if(user.getUserid()!=userupdate.getUserid()){
             throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID,"User : id {"+ userupdate.getUserid() +"}  incorrect user id !!");
         }

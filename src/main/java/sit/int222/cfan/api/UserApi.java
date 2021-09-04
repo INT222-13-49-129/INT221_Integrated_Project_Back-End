@@ -63,12 +63,12 @@ public class UserApi {
 
     @GetMapping(value = "/imgprofile", produces = MediaType.IMAGE_PNG_VALUE)
     public Resource getImgProfile() {
-        return userController.getImgProfile();
+        return userController.getImgProfile(userController.getUser());
     }
 
     @PutMapping("/update")
     public User updateUser(@RequestPart UserUpdateModel userupdate) {
-        return userController.updateUser(userupdate);
+        return userController.updateUser(userController.getUser(),userupdate);
     }
 
     @PutMapping("/update/psw")

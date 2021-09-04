@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int222.cfan.controllers.FoodmenuController;
 import sit.int222.cfan.controllers.FoodtypeController;
@@ -15,6 +16,7 @@ import sit.int222.cfan.controllers.UserController;
 import sit.int222.cfan.entities.Foodmenu;
 import sit.int222.cfan.entities.Foodtype;
 import sit.int222.cfan.entities.Ingredients;
+import sit.int222.cfan.entities.IngredientsType;
 import sit.int222.cfan.models.LoginModel;
 import sit.int222.cfan.models.LoginResponseModel;
 import sit.int222.cfan.models.RegisterModel;
@@ -83,6 +85,27 @@ public class GeneralApi {
     @GetMapping("/ingredients")
     public List<Ingredients> ingredients() {
         return ingredientsController.findAll();
+    }
+
+    @GetMapping("/ingredients/page")
+    public Page<Ingredients> ingredientsWithPage(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "20") Integer pageSize,
+            @RequestParam(defaultValue = "ingredientsid") String sortBy,
+            @RequestParam(defaultValue = "") IngredientsType type,
+            @RequestParam(defaultValue = "") String searchData) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        return ingredientsController.findPage(type, searchData, pageable);
+    }
+
+    @GetMapping("/ingredients/type")
+    public ResponseEntity<IngredientsType[]> ingredientsType() {
+        return ResponseEntity.ok(ingredientsController.ingredientsType());
+    }
+
+    @GetMapping("/ingredients/{id}")
+    public Ingredients ingredientsId(@PathVariable Long id) {
+        return ingredientsController.findById(id);
     }
 
     @GetMapping("/foodtype")
