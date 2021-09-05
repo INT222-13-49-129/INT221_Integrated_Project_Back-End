@@ -18,6 +18,9 @@ public class Foodmenu {
   private String image;
   private String description;
 
+  @Column(name = "user_userid", insertable = false, updatable = false)
+  private Long userid;
+
   @Column(columnDefinition = "ENUM('PUBLISH', 'PERSONAL')")
   @Enumerated(EnumType.STRING)
   private FoodmenuStatus foodmenustatus;

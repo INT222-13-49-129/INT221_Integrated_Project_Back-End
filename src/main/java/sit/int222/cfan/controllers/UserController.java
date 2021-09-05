@@ -3,6 +3,8 @@ package sit.int222.cfan.controllers;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,7 @@ import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -37,16 +40,29 @@ public class UserController {
     @Autowired
     StorageService storageService;
 
-    public User getUser() {
-        Long userid = SecurityUtil.getCurrentUserId();
+    public List<User> getUserAll(){
+        return userRepository.findAll();
+    }
+    public Page<User> getUserPage(Pageable pageable){
+        return userRepository.findAll(pageable);
+    }
+    public User getUserById(Long userid){
         if (userid == null) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_UNAUTHORIZED, "User : unauthorized !!");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID, "User : id null !!");
         }
         User user = userRepository.findById(userid).orElse(null);
         if (user==null){
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_DOES_NOT_EXIST, "User : id {"+ userid +"} does not exist !!");
         }
         return user;
+    }
+
+    public User getUser() {
+        Long userid = SecurityUtil.getCurrentUserId();
+        if (userid == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_UNAUTHORIZED, "User : unauthorized !!");
+        }
+        return getUserById(userid);
     }
 
     public LoginResponseModel register(RegisterModel registerModel) {
@@ -217,5 +233,10 @@ public class UserController {
         HashMap<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return map;
+    }
+
+    public User changestatus(User user, User.Status status){
+        user.setStatus(status);
+        return userRepository.save(user);
     }
 }

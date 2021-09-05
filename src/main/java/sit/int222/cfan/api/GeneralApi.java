@@ -28,13 +28,10 @@ import java.util.List;
 public class GeneralApi {
     @Autowired
     private FoodmenuController foodmenuController;
-
     @Autowired
     private IngredientsController ingredientsController;
-
     @Autowired
     private FoodtypeController foodtypeController;
-
     @Autowired
     private UserController userController;
 

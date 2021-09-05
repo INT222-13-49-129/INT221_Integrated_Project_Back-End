@@ -34,6 +34,18 @@ public class FoodmenuController {
         return foodmenuRepository.findAll();
     }
 
+    public Page<Foodmenu> findPageAll(Pageable pageable) {
+        return foodmenuRepository.findAll(pageable);
+    }
+
+    public Foodmenu findById(Long id) {
+        Foodmenu foodmenu = foodmenuRepository.findById(id).orElse(null);
+        if (foodmenu == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_DOES_NOT_EXIST, "Foodmenu : id {" + id + "} does not exist !!");
+        }
+        return foodmenu;
+    }
+
     public List<Foodmenu> findPUBLISH() {
         return foodmenuRepository.findAllByFoodmenustatus(Foodmenu.FoodmenuStatus.PUBLISH);
     }
@@ -99,6 +111,9 @@ public class FoodmenuController {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PUBLISH_ALREADY_EXIST, "Foodmenu :Foodname {" + newfoodmenu.getFoodname() + "} does already exist !!");
             }
         } else {
+            if(user == null){
+                throw new BaseException(ExceptionResponse.ERROR_CODE.USER_IS_NULL, "User :User cannot be null if this is a personal!!");
+            }
             if (foodmenuRepository.findByUserAndFoodname(user, newfoodmenu.getFoodname()) != null) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PERSONAL_ALREADY_EXIST, "Foodmenu :Foodname {" + newfoodmenu.getFoodname() + "} does already exist !!");
             }
@@ -114,6 +129,11 @@ public class FoodmenuController {
         foodmenu.setTotalkcal(calculatetotalkcal(listtotalkcal));
         foodmenu.setDescription(newfoodmenu.getDescription());
         foodmenu.setUser(user);
+        } catch (Exception e) {
+            foodmenuRepository.delete(foodmenu);
+            throw e;
+        }
+        try {
         String s = "FM-";
             foodmenu.setImage(storageService.store(fileImg, s.concat(String.valueOf(foodmenu.getFoodmenuid()))));
         } catch (Exception e) {
@@ -122,14 +142,17 @@ public class FoodmenuController {
         }
         return foodmenuRepository.save(foodmenu);
     }
-    public Foodmenu updateFoodmenu(User user, MultipartFile fileImg,Foodmenu updatefoodmenu,Long id){
-        Foodmenu foodmenu = findByIdUser(user,id);
+
+    public Foodmenu updateFoodmenu(Foodmenu foodmenu,MultipartFile fileImg,Foodmenu updatefoodmenu){
         if (updatefoodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PUBLISH)) {
             if (foodmenuRepository.findByFoodnameAndFoodmenustatus(updatefoodmenu.getFoodname(), Foodmenu.FoodmenuStatus.PUBLISH) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PUBLISH_ALREADY_EXIST, "Foodmenu :Foodname {" + updatefoodmenu.getFoodname() + "} does already exist !!");
             }
         } else {
-            if (foodmenuRepository.findByUserAndFoodname(user, updatefoodmenu.getFoodname()) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
+            if(foodmenu.getUser() == null){
+                throw new BaseException(ExceptionResponse.ERROR_CODE.USER_IS_NULL, "User :User cannot be null if this is a personal!!");
+            }
+            if (foodmenuRepository.findByUserAndFoodname(foodmenu.getUser(), updatefoodmenu.getFoodname()) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PERSONAL_ALREADY_EXIST, "Foodmenu :Foodname {" + updatefoodmenu.getFoodname() + "} does already exist !!");
             }
         }
@@ -153,8 +176,17 @@ public class FoodmenuController {
         return foodmenuRepository.save(foodmenu);
     }
 
-    public Map<String,Boolean> deleteFoodmenu(User user,Long id){
+    public Foodmenu updateFoodmenuUser(User user, MultipartFile fileImg,Foodmenu updatefoodmenu,Long id){
         Foodmenu foodmenu = findByIdUser(user,id);
+        return updateFoodmenu(foodmenu,fileImg,updatefoodmenu);
+    }
+
+    public Foodmenu updateFoodmenuId(MultipartFile fileImg,Foodmenu updatefoodmenu,Long id){
+        Foodmenu foodmenu = findById(id);
+        return updateFoodmenu(foodmenu,fileImg,updatefoodmenu);
+    }
+
+    public Map<String,Boolean> deleteFoodmenu(Foodmenu foodmenu){
         try {
             foodmenuHasIngredientsRepository.deleteAll(foodmenu.getFoodmenuHasIngredientsList());
             storageService.delete(foodmenu.getImage());
@@ -165,6 +197,16 @@ public class FoodmenuController {
         HashMap<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return map;
+    }
+
+    public Map<String,Boolean> deleteFoodmenuUser(User user,Long id){
+        Foodmenu foodmenu = findByIdUser(user,id);
+        return deleteFoodmenu(foodmenu);
+    }
+
+    public Map<String,Boolean> deleteFoodmenuId(Long id){
+        Foodmenu foodmenu = findById(id);
+        return deleteFoodmenu(foodmenu);
     }
 
     public List<FoodmenuHasIngredients> calculatetotalkcalIngredients(List<FoodmenuHasIngredients> foodmenuHasIngredientsList, Foodmenu foodmenu) {
@@ -192,8 +234,7 @@ public class FoodmenuController {
         return totalkcal;
     }
 
-    public Resource getfoodmenuImgPUBLISH(Long id)  {
-        Foodmenu foodmenu = findByIdPUBLISH(id);
+    public Resource getfoodmenuImg(Foodmenu foodmenu) {
         try {
             return storageService.loadAsResource(foodmenu.getImage());
         } catch (Exception e) {
@@ -201,12 +242,18 @@ public class FoodmenuController {
         }
     }
 
+    public Resource getfoodmenuImgId(Long id)  {
+        Foodmenu foodmenu = findById(id);
+        return getfoodmenuImg(foodmenu);
+    }
+
+    public Resource getfoodmenuImgPUBLISH(Long id)  {
+        Foodmenu foodmenu = findByIdPUBLISH(id);
+        return getfoodmenuImg(foodmenu);
+    }
+
     public Resource getfoodmenuImgUser(User user,Long id)  {
         Foodmenu foodmenu = findByIdUser(user,id);
-        try {
-            return storageService.loadAsResource(foodmenu.getImage());
-        } catch (Exception e) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_NOT_FOUND,"File : name {"+foodmenu.getImage()+"} not found !!");
-        }
+        return getfoodmenuImg(foodmenu);
     }
 }

@@ -135,12 +135,12 @@ public class UserApi {
 
     @PutMapping(value = "/foodmenu/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Foodmenu updateFoodmenu(@RequestParam(value = "file", required = false) MultipartFile fileImg, @RequestPart Foodmenu updatefoodmenu, @PathVariable Long id) {
-        return foodmenuController.updateFoodmenu(userController.getUser(), fileImg, updatefoodmenu, id);
+        return foodmenuController.updateFoodmenuUser(userController.getUser(), fileImg, updatefoodmenu, id);
     }
 
     @DeleteMapping("/foodmenu/delete/{id}")
     public ResponseEntity<Map> deleteFoodmenu(@PathVariable Long id) {
-        return ResponseEntity.ok(foodmenuController.deleteFoodmenu(userController.getUser(), id));
+        return ResponseEntity.ok(foodmenuController.deleteFoodmenuUser(userController.getUser(), id));
     }
 
     @GetMapping(value = "/foodmenu/img/{id}", produces = MediaType.IMAGE_PNG_VALUE)

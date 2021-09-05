@@ -22,6 +22,7 @@ public class ExceptionResponse {
         USER_INCORRECT_ID(2008),
         USER_EMAIL_INCORRECT(2009),
         USER_USERNAME_INCORRECT(2010),
+        USER_IS_NULL(2011),
 
         FILE_SUBMITTED_NOT_FOUND(3001),
         FILE_CAN_NOT_SAVE(3002),
