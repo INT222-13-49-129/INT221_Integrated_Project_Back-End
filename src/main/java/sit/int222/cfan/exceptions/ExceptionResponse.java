@@ -34,7 +34,8 @@ public class ExceptionResponse {
         REQUEST_DOES_NOT_EXIST(5001),
         REQUEST_SUBMITTED_NOT_FOUND(5002),
 
-        INGREDIENTS_DOES_NOT_EXIST(6001);
+        INGREDIENTS_DOES_NOT_EXIST(6001),
+        INGREDIENTS_INGREDIENTSNAME_ALREADY_EXIST(6002);
         private int value;
         ERROR_CODE(int value) {
             this.value = value;

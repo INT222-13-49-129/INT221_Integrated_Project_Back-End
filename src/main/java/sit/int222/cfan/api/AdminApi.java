@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sit.int222.cfan.controllers.FoodmenuController;
+import sit.int222.cfan.controllers.IngredientsController;
 import sit.int222.cfan.controllers.UserController;
 import sit.int222.cfan.entities.Foodmenu;
+import sit.int222.cfan.entities.Ingredients;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
@@ -27,18 +29,20 @@ public class AdminApi {
     private UserController userController;
     @Autowired
     private FoodmenuController foodmenuController;
+    @Autowired
+    private IngredientsController ingredientsController;
 
     @PutMapping("/changestatus")
     public User changestatus() {
-        User user = userController.changestatus(userController.getUser(),User.Status.NORMAL);
-        if(user.getStatus().equals(User.Status.NORMAL)){
+        User user = userController.changestatus(userController.getUser(), User.Status.NORMAL);
+        if (user.getStatus().equals(User.Status.NORMAL)) {
             userController.logout();
         }
         return user;
     }
 
     @GetMapping("/user")
-    public List<User> users(){
+    public List<User> users() {
         return userController.getUserAll();
     }
 
@@ -46,13 +50,13 @@ public class AdminApi {
     public Page<User> usersWithPage(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
-            @RequestParam(defaultValue = "userid") String sortBy){
+            @RequestParam(defaultValue = "userid") String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         return userController.getUserPage(pageable);
     }
 
     @GetMapping("/user/{id}")
-    public User user(@PathVariable Long id){
+    public User user(@PathVariable Long id) {
         return userController.getUserById(id);
     }
 
@@ -61,23 +65,23 @@ public class AdminApi {
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
-            @RequestParam(defaultValue = "foodmenuid") String sortBy){
+            @RequestParam(defaultValue = "foodmenuid") String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        return foodmenuController.findPageUser(userController.getUserById(id),pageable);
+        return foodmenuController.findPageUser(userController.getUserById(id), pageable);
     }
 
     @GetMapping(value = "/user/{id}/imgprofile", produces = MediaType.IMAGE_PNG_VALUE)
-    public Resource userImgProfile(@PathVariable Long id){
+    public Resource userImgProfile(@PathVariable Long id) {
         return userController.getImgProfile(userController.getUserById(id));
     }
 
     @PutMapping("/user/{id}/changestatus")
     public User changestatus(@PathVariable Long id) {
-        return userController.changestatus(userController.getUserById(id),User.Status.ADMIN);
+        return userController.changestatus(userController.getUserById(id), User.Status.ADMIN);
     }
 
     @GetMapping("/foodmenu")
-    public List<Foodmenu> foodmenus(){
+    public List<Foodmenu> foodmenus() {
         return foodmenuController.findAll();
     }
 
@@ -85,13 +89,13 @@ public class AdminApi {
     public Page<Foodmenu> foodmenusWithPage(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
-            @RequestParam(defaultValue = "foodmenuid") String sortBy){
+            @RequestParam(defaultValue = "foodmenuid") String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         return foodmenuController.findPageAll(pageable);
     }
 
     @GetMapping("/foodmenu/{id}")
-    public Foodmenu foodmenusWithPage(@PathVariable Long id){
+    public Foodmenu foodmenusWithPage(@PathVariable Long id) {
         return foodmenuController.findById(id);
     }
 
@@ -116,5 +120,20 @@ public class AdminApi {
     @DeleteMapping("/foodmenu/delete/{id}")
     public ResponseEntity<Map> deleteFoodmenu(@PathVariable Long id) {
         return ResponseEntity.ok(foodmenuController.deleteFoodmenuId(id));
+    }
+
+    @PostMapping("/ingredients/add")
+    public Ingredients createIngredients(@RequestPart Ingredients newingredients) {
+        return ingredientsController.createIngredients(newingredients);
+    }
+
+    @PutMapping(value = "/ingredients/edit/{id}")
+    public Ingredients updateIngredients(@RequestPart Ingredients updateingredients, @PathVariable Long id) {
+        return ingredientsController.updateIngredients(updateingredients, id);
+    }
+
+    @DeleteMapping("/ingredients/delete/{id}")
+    public ResponseEntity<Map> deleteIngredients(@PathVariable Long id) {
+        return ResponseEntity.ok(ingredientsController.deleteIngredients(id));
     }
 }

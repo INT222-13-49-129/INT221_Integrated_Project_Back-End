@@ -7,6 +7,8 @@ import sit.int222.cfan.entities.Ingredients;
 import sit.int222.cfan.entities.IngredientsType;
 
 public interface IngredientsRepository extends JpaRepository<Ingredients, Long> {
+    Boolean existsByIngredientsname(String ingredientsname);
+
     Page<Ingredients> findAllByIngredientsnameContaining(String searchData,Pageable pageable);
 
     Page<Ingredients> findAllByIngredientsnameContainingAndIngredientstype(String searchData, IngredientsType type,Pageable pageable);
