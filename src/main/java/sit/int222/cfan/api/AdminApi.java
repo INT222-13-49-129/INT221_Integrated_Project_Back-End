@@ -10,14 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import sit.int222.cfan.controllers.FoodmenuController;
-import sit.int222.cfan.controllers.FoodtypeController;
-import sit.int222.cfan.controllers.IngredientsController;
-import sit.int222.cfan.controllers.UserController;
-import sit.int222.cfan.entities.Foodmenu;
-import sit.int222.cfan.entities.Foodtype;
-import sit.int222.cfan.entities.Ingredients;
-import sit.int222.cfan.entities.User;
+import sit.int222.cfan.controllers.*;
+import sit.int222.cfan.entities.*;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
 
@@ -35,6 +29,8 @@ public class AdminApi {
     private IngredientsController ingredientsController;
     @Autowired
     private FoodtypeController foodtypeController;
+    @Autowired
+    private RequestController requestController;
 
     @PutMapping("/changestatus")
     public User changestatus() {
@@ -154,5 +150,30 @@ public class AdminApi {
     @DeleteMapping("/foodtype/delete/{id}")
     public ResponseEntity<Map> deleteFoodtype(@PathVariable Long id) {
         return ResponseEntity.ok(foodtypeController.deleteFoodtype(id));
+    }
+
+    @GetMapping("/request")
+    public List<Request> requests() {
+        return requestController.findAll();
+    }
+
+    @GetMapping("/request/{id}")
+    public Request request(@PathVariable Long id) {
+        return requestController.findById(id);
+    }
+
+    @GetMapping("/request/status")
+    public Request.Status[] requestStatus() {
+        return requestController.requestStatus();
+    }
+
+    @PutMapping("/request/changestatus/{id}")
+    public Request changestatusRequest(@PathVariable Long id,@RequestPart Request request) {
+        return requestController.changestatus(id,request);
+    }
+
+    @DeleteMapping("/request/delete/{id}")
+    public ResponseEntity<Map> deleteRequest(@PathVariable Long id) {
+        return ResponseEntity.ok(requestController.deleteRequestId(id));
     }
 }

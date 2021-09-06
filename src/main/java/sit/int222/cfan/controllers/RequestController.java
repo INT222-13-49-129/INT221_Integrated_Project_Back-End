@@ -23,6 +23,14 @@ public class RequestController {
         return requestRepository.findAll();
     }
 
+    public Request findById(Long id){
+        Request request = requestRepository.findById(id).orElse(null);
+        if(request == null){
+            throw new BaseException(ExceptionResponse.ERROR_CODE.REQUEST_DOES_NOT_EXIST, "Request : id {" + id + "} does not exist !!");
+        }
+        return request;
+    }
+
     public List<Request> findRequestsUser(User user) {
         return requestRepository.findAllByUser(user);
     }
@@ -50,16 +58,38 @@ public class RequestController {
             request.setIngredientsreq(newrequest.getIngredientsreq());
         }else {
             requestRepository.delete(request);
-            throw new BaseException(ExceptionResponse.ERROR_CODE.REQUEST_SUBMITTED_NOT_FOUND, "Request : submitted request was not found");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.REQUEST_SUBMITTED_NOT_FOUND, "Request : submitted request was not found !!");
         }
         return requestRepository.save(request);
     }
 
-    public Map<String,Boolean> deleteRequest(User user, Long id){
-        Request request = findByIdUser(user,id);
+    public Map<String,Boolean> deleteRequest(Request request){
         requestRepository.delete(request);
         HashMap<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return map;
+    }
+
+    public Map<String,Boolean> deleteRequestUser(User user,Long id){
+        Request request = findByIdUser(user,id);
+        return deleteRequest(request);
+    }
+
+    public Map<String,Boolean> deleteRequestId(Long id){
+        Request request = findById(id);
+        return deleteRequest(request);
+    }
+
+    public Request changestatus(Long id,Request statusrequest){
+        Request request = findById(id);
+        if(statusrequest.getStatus() == null){
+            throw new BaseException(ExceptionResponse.ERROR_CODE.REQUEST_STATUS_IS_NULLL, "Request : request status is void !!");
+        }
+        request.setStatus(statusrequest.getStatus());
+        return requestRepository.save(request);
+    }
+
+    public Request.Status[] requestStatus() {
+        return Request.Status.values();
     }
 }

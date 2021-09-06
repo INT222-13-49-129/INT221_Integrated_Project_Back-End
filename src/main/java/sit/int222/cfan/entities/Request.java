@@ -17,15 +17,18 @@ public class Request {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "user_userid", insertable = false, updatable = false)
+    private Long userid;
+
     @JsonBackReference("user-request")
     @ManyToOne
     private User user;
 
-    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL,orphanRemoval = true)
     @PrimaryKeyJoinColumn
     private Ingredientsreq ingredientsreq;
 
-    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL,orphanRemoval = true)
     @PrimaryKeyJoinColumn
     private Foodtypereq foodtypereq;
 

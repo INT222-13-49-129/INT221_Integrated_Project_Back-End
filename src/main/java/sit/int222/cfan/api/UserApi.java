@@ -195,6 +195,6 @@ public class UserApi {
 
     @DeleteMapping("/request/delete/{id}")
     public ResponseEntity<Map> deleteRequest(@PathVariable Long id) {
-        return ResponseEntity.ok(requestController.deleteRequest(userController.getUser(), id));
+        return ResponseEntity.ok(requestController.deleteRequestUser(userController.getUser(), id));
     }
 }
