@@ -11,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sit.int222.cfan.controllers.FoodmenuController;
+import sit.int222.cfan.controllers.FoodtypeController;
 import sit.int222.cfan.controllers.IngredientsController;
 import sit.int222.cfan.controllers.UserController;
 import sit.int222.cfan.entities.Foodmenu;
+import sit.int222.cfan.entities.Foodtype;
 import sit.int222.cfan.entities.Ingredients;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
@@ -31,6 +33,8 @@ public class AdminApi {
     private FoodmenuController foodmenuController;
     @Autowired
     private IngredientsController ingredientsController;
+    @Autowired
+    private FoodtypeController foodtypeController;
 
     @PutMapping("/changestatus")
     public User changestatus() {
@@ -135,5 +139,20 @@ public class AdminApi {
     @DeleteMapping("/ingredients/delete/{id}")
     public ResponseEntity<Map> deleteIngredients(@PathVariable Long id) {
         return ResponseEntity.ok(ingredientsController.deleteIngredients(id));
+    }
+
+    @PostMapping("/foodtype/add")
+    public Foodtype createFoodtype(@RequestPart Foodtype newfoodtype) {
+        return foodtypeController.createFoodtype(newfoodtype);
+    }
+
+    @PutMapping(value = "/foodtype/edit/{id}")
+    public Foodtype updateFoodtype(@RequestPart Foodtype updatefoodtype, @PathVariable Long id) {
+        return foodtypeController.updateFoodtype(updatefoodtype, id);
+    }
+
+    @DeleteMapping("/foodtype/delete/{id}")
+    public ResponseEntity<Map> deleteFoodtype(@PathVariable Long id) {
+        return ResponseEntity.ok(foodtypeController.deleteFoodtype(id));
     }
 }

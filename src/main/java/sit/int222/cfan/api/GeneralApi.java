@@ -110,6 +110,9 @@ public class GeneralApi {
         return foodtypeController.findAll();
     }
 
+    @GetMapping("/foodtype/{id}")
+    public Foodtype foodtypeId(@PathVariable Long id) { return foodtypeController.findById(id); }
+
     @PostMapping("/register")
     public LoginResponseModel register(@RequestPart RegisterModel regis) {
         return userController.register(regis);

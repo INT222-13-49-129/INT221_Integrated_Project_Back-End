@@ -35,7 +35,10 @@ public class ExceptionResponse {
         REQUEST_SUBMITTED_NOT_FOUND(5002),
 
         INGREDIENTS_DOES_NOT_EXIST(6001),
-        INGREDIENTS_INGREDIENTSNAME_ALREADY_EXIST(6002);
+        INGREDIENTS_INGREDIENTSNAME_ALREADY_EXIST(6002),
+
+        FOODTYPE_DOES_NOT_EXIST(7001),
+        FOODTYPE_TYPENAME_ALREADY_EXIST(7002);
         private int value;
         ERROR_CODE(int value) {
             this.value = value;
