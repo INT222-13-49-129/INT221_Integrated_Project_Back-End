@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class ExceptionResponse {
 
-    public static enum ERROR_CODE {
+    public enum ERROR_CODE {
         FOODMENU_DOES_NOT_EXIST(1001),
         FOODMENU_FOODNAME_PUBLISH_ALREADY_EXIST(1002),
         FOODMENU_FOODNAME_PERSONAL_ALREADY_EXIST(1003),
@@ -23,6 +23,8 @@ public class ExceptionResponse {
         USER_EMAIL_INCORRECT(2009),
         USER_USERNAME_INCORRECT(2010),
         USER_IS_NULL(2011),
+        USER_ACCOUNT_NOT_VERIFIED(2012),
+        USER_ACCOUNT_VERIFIED(2013),
 
         FILE_SUBMITTED_NOT_FOUND(3001),
         FILE_CAN_NOT_SAVE(3002),
@@ -39,11 +41,19 @@ public class ExceptionResponse {
         INGREDIENTS_INGREDIENTSNAME_ALREADY_EXIST(6002),
 
         FOODTYPE_DOES_NOT_EXIST(7001),
-        FOODTYPE_TYPENAME_ALREADY_EXIST(7002);
-        private int value;
+        FOODTYPE_TYPENAME_ALREADY_EXIST(7002),
+
+        EMAIL_TEMPLATE_NOT_FOUND(8001),
+
+        PIN_EMAIL_DOES_NOT_EXIST(9001),
+        PIN_PINCODE_INCORRECT(9002),
+        PIN_EXPIRED(9003);
+        private final int value;
+
         ERROR_CODE(int value) {
             this.value = value;
         }
+
         public int getValue() {
             return value;
         }

@@ -10,7 +10,7 @@ import java.util.List;
 public interface MealRepository extends JpaRepository<Meal, Long> {
     List<Meal> findAllByUser(User user);
 
-    Meal findByUserAndMealid(User user,Long id);
+    Meal findByUserAndMealid(User user, Long id);
 
     List<Meal> findByUserAndDatemeal(User user, Date date);
 }

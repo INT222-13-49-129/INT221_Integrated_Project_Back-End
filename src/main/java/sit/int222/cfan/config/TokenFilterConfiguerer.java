@@ -19,7 +19,7 @@ public class TokenFilterConfiguerer extends SecurityConfigurerAdapter<DefaultSec
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        TokenFilter filter = new TokenFilter(service,jwtblacklistRepository);
+        TokenFilter filter = new TokenFilter(service, jwtblacklistRepository);
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
     }
 }

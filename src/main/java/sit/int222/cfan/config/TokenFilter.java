@@ -1,7 +1,6 @@
 package sit.int222.cfan.config;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -46,7 +45,7 @@ public class TokenFilter extends GenericFilterBean {
         }
 
         String token = authorization.substring(7);
-        if(jwtblacklistRepository.existsByToken(token)){
+        if (jwtblacklistRepository.existsByToken(token)) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }

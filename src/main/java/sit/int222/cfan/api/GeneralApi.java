@@ -22,6 +22,7 @@ import sit.int222.cfan.models.LoginResponseModel;
 import sit.int222.cfan.models.RegisterModel;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/general")
@@ -111,11 +112,23 @@ public class GeneralApi {
     }
 
     @GetMapping("/foodtype/{id}")
-    public Foodtype foodtypeId(@PathVariable Long id) { return foodtypeController.findById(id); }
+    public Foodtype foodtypeId(@PathVariable Long id) {
+        return foodtypeController.findById(id);
+    }
 
     @PostMapping("/register")
-    public LoginResponseModel register(@RequestPart RegisterModel regis) {
-        return userController.register(regis);
+    public ResponseEntity<Map> register(@RequestPart RegisterModel regis) {
+        return ResponseEntity.ok(userController.register(regis));
+    }
+
+    @PostMapping("/pin/verify")
+    public LoginResponseModel pinverify(@RequestPart LoginModel emailpin) {
+        return userController.verifypin(emailpin);
+    }
+
+    @PostMapping("/pin/resend")
+    public ResponseEntity<Map> pinresend(@RequestPart LoginModel email) {
+        return ResponseEntity.ok(userController.pinresend(email));
     }
 
     @PostMapping("/login")

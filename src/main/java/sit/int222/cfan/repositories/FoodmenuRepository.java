@@ -18,7 +18,7 @@ public interface FoodmenuRepository extends JpaRepository<Foodmenu, Long> {
     Page<Foodmenu> findSearch(Foodmenu.FoodmenuStatus foodmenuStatus, String searchData, Pageable pageable);
 
     @Query("select f from Foodmenu as f where f.foodmenustatus = ?1 and f.foodtype.foodtypeid = ?2")
-    Page<Foodmenu> findAllByFoodtypeId(Foodmenu.FoodmenuStatus foodmenuStatus,Long foodtypeId,Pageable pageable);
+    Page<Foodmenu> findAllByFoodtypeId(Foodmenu.FoodmenuStatus foodmenuStatus, Long foodtypeId, Pageable pageable);
 
     Foodmenu findByFoodmenuidAndFoodmenustatus(Long id, Foodmenu.FoodmenuStatus foodmenuStatus);
 
@@ -27,15 +27,15 @@ public interface FoodmenuRepository extends JpaRepository<Foodmenu, Long> {
     Page<Foodmenu> findAllByUser(User user, Pageable pageable);
 
     @Query(value = "SELECT f FROM Foodmenu as f where f.user = ?1 and (f.foodname like %?2% or f.description like %?2%)")
-    Page<Foodmenu> findAllByFoodnameContainingOrDescriptionContainingAndUser(User user,String searchData,Pageable pageable);
+    Page<Foodmenu> findAllByFoodnameContainingOrDescriptionContainingAndUser(User user, String searchData, Pageable pageable);
 
     @Query("select f from Foodmenu as f where f.user = ?1 and f.foodtype.foodtypeid = ?2")
-    Page<Foodmenu> findAllByFoodtypeIdUser(User user,Long foodtypeId,Pageable pageable);
+    Page<Foodmenu> findAllByFoodtypeIdUser(User user, Long foodtypeId, Pageable pageable);
 
-    Foodmenu findByUserAndFoodmenuid(User user,Long id);
+    Foodmenu findByUserAndFoodmenuid(User user, Long id);
 
     Foodmenu findByFoodnameAndFoodmenustatus(String foodname, Foodmenu.FoodmenuStatus foodmenuStatus);
 
-    Foodmenu findByUserAndFoodname(User user,String foodname);
+    Foodmenu findByUserAndFoodname(User user, String foodname);
 
 }

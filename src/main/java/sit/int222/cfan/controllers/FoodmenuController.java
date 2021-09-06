@@ -94,7 +94,7 @@ public class FoodmenuController {
         return foodmenu;
     }
 
-    public Foodmenu findByIdPUBLISHorUser(User user, Long id){
+    public Foodmenu findByIdPUBLISHorUser(User user, Long id) {
         Foodmenu foodmenu = foodmenuRepository.findByUserAndFoodmenuid(user, id);
         if (foodmenu == null) {
             foodmenu = foodmenuRepository.findByFoodmenuidAndFoodmenustatus(id, Foodmenu.FoodmenuStatus.PUBLISH);
@@ -105,13 +105,13 @@ public class FoodmenuController {
         return foodmenu;
     }
 
-    public Foodmenu createFoodmenu(User user, MultipartFile fileImg,Foodmenu newfoodmenu) {
+    public Foodmenu createFoodmenu(User user, MultipartFile fileImg, Foodmenu newfoodmenu) {
         if (newfoodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PUBLISH)) {
             if (foodmenuRepository.findByFoodnameAndFoodmenustatus(newfoodmenu.getFoodname(), Foodmenu.FoodmenuStatus.PUBLISH) != null) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PUBLISH_ALREADY_EXIST, "Foodmenu :Foodname {" + newfoodmenu.getFoodname() + "} does already exist !!");
             }
         } else {
-            if(user == null){
+            if (user == null) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.USER_IS_NULL, "User :User cannot be null if this is a personal!!");
             }
             if (foodmenuRepository.findByUserAndFoodname(user, newfoodmenu.getFoodname()) != null) {
@@ -124,32 +124,32 @@ public class FoodmenuController {
         foodmenu.setFoodtype(newfoodmenu.getFoodtype());
         foodmenu = foodmenuRepository.save(foodmenu);
         try {
-        List<FoodmenuHasIngredients> listtotalkcal = calculatetotalkcalIngredients(newfoodmenu.getFoodmenuHasIngredientsList(),foodmenu);
-        foodmenu.setFoodmenuHasIngredientsList(listtotalkcal);
-        foodmenu.setTotalkcal(calculatetotalkcal(listtotalkcal));
-        foodmenu.setDescription(newfoodmenu.getDescription());
-        foodmenu.setUser(user);
+            List<FoodmenuHasIngredients> listtotalkcal = calculatetotalkcalIngredients(newfoodmenu.getFoodmenuHasIngredientsList(), foodmenu);
+            foodmenu.setFoodmenuHasIngredientsList(listtotalkcal);
+            foodmenu.setTotalkcal(calculatetotalkcal(listtotalkcal));
+            foodmenu.setDescription(newfoodmenu.getDescription());
+            foodmenu.setUser(user);
         } catch (Exception e) {
             foodmenuRepository.delete(foodmenu);
             throw e;
         }
         try {
-        String s = "FM-";
+            String s = "FM-";
             foodmenu.setImage(storageService.store(fileImg, s.concat(String.valueOf(foodmenu.getFoodmenuid()))));
         } catch (Exception e) {
             foodmenuRepository.delete(foodmenu);
-            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_SAVE,"File : file cannot be saved !!");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_SAVE, "File : file cannot be saved !!");
         }
         return foodmenuRepository.save(foodmenu);
     }
 
-    public Foodmenu updateFoodmenu(Foodmenu foodmenu,MultipartFile fileImg,Foodmenu updatefoodmenu){
+    public Foodmenu updateFoodmenu(Foodmenu foodmenu, MultipartFile fileImg, Foodmenu updatefoodmenu) {
         if (updatefoodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PUBLISH)) {
             if (foodmenuRepository.findByFoodnameAndFoodmenustatus(updatefoodmenu.getFoodname(), Foodmenu.FoodmenuStatus.PUBLISH) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PUBLISH_ALREADY_EXIST, "Foodmenu :Foodname {" + updatefoodmenu.getFoodname() + "} does already exist !!");
             }
         } else {
-            if(foodmenu.getUser() == null){
+            if (foodmenu.getUser() == null) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.USER_IS_NULL, "User :User cannot be null if this is a personal!!");
             }
             if (foodmenuRepository.findByUserAndFoodname(foodmenu.getUser(), updatefoodmenu.getFoodname()) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
@@ -160,51 +160,51 @@ public class FoodmenuController {
         foodmenu.setFoodmenustatus(updatefoodmenu.getFoodmenustatus());
         foodmenu.setFoodtype(updatefoodmenu.getFoodtype());
         foodmenuHasIngredientsRepository.deleteAll(foodmenu.getFoodmenuHasIngredientsList());
-        List<FoodmenuHasIngredients> listtotalkcal = calculatetotalkcalIngredients(updatefoodmenu.getFoodmenuHasIngredientsList(),foodmenu);
+        List<FoodmenuHasIngredients> listtotalkcal = calculatetotalkcalIngredients(updatefoodmenu.getFoodmenuHasIngredientsList(), foodmenu);
         foodmenu.setFoodmenuHasIngredientsList(listtotalkcal);
         foodmenu.setTotalkcal(calculatetotalkcal(listtotalkcal));
         foodmenu.setDescription(updatefoodmenu.getDescription());
-        if(fileImg != null){
+        if (fileImg != null) {
             String s = "FM-";
             try {
                 storageService.delete(foodmenu.getImage());
                 foodmenu.setImage(storageService.store(fileImg, s.concat(String.valueOf(foodmenu.getFoodmenuid()))));
             } catch (Exception e) {
-                throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_SAVE,"File : file cannot be saved !!");
+                throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_SAVE, "File : file cannot be saved !!");
             }
         }
         return foodmenuRepository.save(foodmenu);
     }
 
-    public Foodmenu updateFoodmenuUser(User user, MultipartFile fileImg,Foodmenu updatefoodmenu,Long id){
-        Foodmenu foodmenu = findByIdUser(user,id);
-        return updateFoodmenu(foodmenu,fileImg,updatefoodmenu);
+    public Foodmenu updateFoodmenuUser(User user, MultipartFile fileImg, Foodmenu updatefoodmenu, Long id) {
+        Foodmenu foodmenu = findByIdUser(user, id);
+        return updateFoodmenu(foodmenu, fileImg, updatefoodmenu);
     }
 
-    public Foodmenu updateFoodmenuId(MultipartFile fileImg,Foodmenu updatefoodmenu,Long id){
+    public Foodmenu updateFoodmenuId(MultipartFile fileImg, Foodmenu updatefoodmenu, Long id) {
         Foodmenu foodmenu = findById(id);
-        return updateFoodmenu(foodmenu,fileImg,updatefoodmenu);
+        return updateFoodmenu(foodmenu, fileImg, updatefoodmenu);
     }
 
-    public Map<String,Boolean> deleteFoodmenu(Foodmenu foodmenu){
+    public Map<String, Boolean> deleteFoodmenu(Foodmenu foodmenu) {
         try {
             foodmenuHasIngredientsRepository.deleteAll(foodmenu.getFoodmenuHasIngredientsList());
             storageService.delete(foodmenu.getImage());
             foodmenuRepository.delete(foodmenu);
         } catch (IOException e) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_DELETE,"File : file cannot delete !!");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_DELETE, "File : file cannot delete !!");
         }
         HashMap<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return map;
     }
 
-    public Map<String,Boolean> deleteFoodmenuUser(User user,Long id){
-        Foodmenu foodmenu = findByIdUser(user,id);
+    public Map<String, Boolean> deleteFoodmenuUser(User user, Long id) {
+        Foodmenu foodmenu = findByIdUser(user, id);
         return deleteFoodmenu(foodmenu);
     }
 
-    public Map<String,Boolean> deleteFoodmenuId(Long id){
+    public Map<String, Boolean> deleteFoodmenuId(Long id) {
         Foodmenu foodmenu = findById(id);
         return deleteFoodmenu(foodmenu);
     }
@@ -224,7 +224,7 @@ public class FoodmenuController {
         return list;
     }
 
-    public Long calculatetotalkcal(List<FoodmenuHasIngredients> foodmenuHasIngredientsList){
+    public Long calculatetotalkcal(List<FoodmenuHasIngredients> foodmenuHasIngredientsList) {
         Long totalkcal = 0L;
         ListIterator<FoodmenuHasIngredients> iterator = foodmenuHasIngredientsList.listIterator();
         while (iterator.hasNext()) {
@@ -238,22 +238,22 @@ public class FoodmenuController {
         try {
             return storageService.loadAsResource(foodmenu.getImage());
         } catch (Exception e) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_NOT_FOUND,"File : name {"+foodmenu.getImage()+"} not found !!");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_NOT_FOUND, "File : name {" + foodmenu.getImage() + "} not found !!");
         }
     }
 
-    public Resource getfoodmenuImgId(Long id)  {
+    public Resource getfoodmenuImgId(Long id) {
         Foodmenu foodmenu = findById(id);
         return getfoodmenuImg(foodmenu);
     }
 
-    public Resource getfoodmenuImgPUBLISH(Long id)  {
+    public Resource getfoodmenuImgPUBLISH(Long id) {
         Foodmenu foodmenu = findByIdPUBLISH(id);
         return getfoodmenuImg(foodmenu);
     }
 
-    public Resource getfoodmenuImgUser(User user,Long id)  {
-        Foodmenu foodmenu = findByIdUser(user,id);
+    public Resource getfoodmenuImgUser(User user, Long id) {
+        Foodmenu foodmenu = findByIdUser(user, id);
         return getfoodmenuImg(foodmenu);
     }
 }

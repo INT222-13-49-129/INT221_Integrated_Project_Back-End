@@ -9,16 +9,16 @@ import javax.persistence.*;
 @Data
 public class Foodtypereq {
 
-  @Id
-  @Column(name = "Request_Requestid")
-  private Long requestRequestid;
+    @Id
+    @Column(name = "Request_Requestid")
+    private Long requestRequestid;
 
-  private String typename;
+    private String typename;
 
-  @JsonBackReference
-  @OneToOne
-  @MapsId
-  @JoinColumn(name = "Request_Requestid")
-  private Request request;
+    @JsonBackReference
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "Request_Requestid")
+    private Request request;
 
 }

@@ -11,12 +11,13 @@ import java.util.TimeZone;
 @SpringBootApplication
 @EnableConfigurationProperties({StorageProperties.class})
 public class CfanApplication {
-	@PostConstruct
-	void started() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Bangkok"));
-	}
-	public static void main(String[] args) {
-		SpringApplication.run(CfanApplication.class, args);
-	}
+    @PostConstruct
+    void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Bangkok"));
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(CfanApplication.class, args);
+    }
 
 }

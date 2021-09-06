@@ -10,36 +10,36 @@ import java.util.List;
 @Data
 public class Foodmenu {
 
-  @Id
-  @GeneratedValue
-  private long foodmenuid;
-  private String foodname;
-  private long totalkcal;
-  private String image;
-  private String description;
+    @Id
+    @GeneratedValue
+    private long foodmenuid;
+    private String foodname;
+    private long totalkcal;
+    private String image;
+    private String description;
 
-  @Column(name = "user_userid", insertable = false, updatable = false)
-  private Long userid;
+    @Column(name = "user_userid", insertable = false, updatable = false)
+    private Long userid;
 
-  @Column(columnDefinition = "ENUM('PUBLISH', 'PERSONAL')")
-  @Enumerated(EnumType.STRING)
-  private FoodmenuStatus foodmenustatus;
+    @Column(columnDefinition = "ENUM('PUBLISH', 'PERSONAL')")
+    @Enumerated(EnumType.STRING)
+    private FoodmenuStatus foodmenustatus;
 
-  @ManyToOne
-  private Foodtype foodtype;
+    @ManyToOne
+    private Foodtype foodtype;
 
-  @JsonBackReference(value = "user")
-  @ManyToOne
-  private User user;
+    @JsonBackReference(value = "user")
+    @ManyToOne
+    private User user;
 
-  @OneToMany(mappedBy = "foodmenu")
-  private List<FoodmenuHasIngredients> foodmenuHasIngredientsList;
+    @OneToMany(mappedBy = "foodmenu")
+    private List<FoodmenuHasIngredients> foodmenuHasIngredientsList;
 
-  @JsonBackReference(value = "mealHasFoodmenuList")
-  @OneToMany(mappedBy = "foodmenu",orphanRemoval = true)
-  private List<MealHasFoodmenu> mealHasFoodmenuList;
+    @JsonBackReference(value = "mealHasFoodmenuList")
+    @OneToMany(mappedBy = "foodmenu", orphanRemoval = true)
+    private List<MealHasFoodmenu> mealHasFoodmenuList;
 
-  public enum FoodmenuStatus {
-    PUBLISH,PERSONAL
-  }
+    public enum FoodmenuStatus {
+        PUBLISH, PERSONAL
+    }
 }

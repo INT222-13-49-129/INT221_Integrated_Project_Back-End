@@ -10,6 +10,7 @@ import sit.int222.cfan.entities.User;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 @Service
 public class TokenService {
@@ -24,8 +25,8 @@ public class TokenService {
     }
 
     public String tokenize(User user) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, 60*24);
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Bangkok"));
+        calendar.add(Calendar.MINUTE, 60 * 24);
         Date expiresAt = calendar.getTime();
 
         return JWT.create()
@@ -35,6 +36,7 @@ public class TokenService {
                 .withExpiresAt(expiresAt)
                 .sign(algorithm());
     }
+
     public DecodedJWT verify(String token) {
         try {
             JWTVerifier verifier = JWT.require(algorithm())

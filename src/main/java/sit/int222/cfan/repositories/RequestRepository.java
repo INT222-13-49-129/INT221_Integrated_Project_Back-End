@@ -6,8 +6,8 @@ import sit.int222.cfan.entities.User;
 
 import java.util.List;
 
-public interface RequestRepository extends JpaRepository<Request,Long> {
+public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findAllByUser(User user);
 
-    Request findByUserAndRequestid(User user,Long id);
+    Request findByUserAndRequestid(User user, Long id);
 }

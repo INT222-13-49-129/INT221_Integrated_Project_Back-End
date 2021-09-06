@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sit.int222.cfan.entities.Jwtblacklist;
+import sit.int222.cfan.entities.Pin;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
@@ -20,7 +21,6 @@ import sit.int222.cfan.services.TokenService;
 import sit.int222.cfan.util.SecurityUtil;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,20 +39,24 @@ public class UserController {
     TokenService tokenService;
     @Autowired
     StorageService storageService;
+    @Autowired
+    PinController pinController;
 
-    public List<User> getUserAll(){
+    public List<User> getUserAll() {
         return userRepository.findAll();
     }
-    public Page<User> getUserPage(Pageable pageable){
+
+    public Page<User> getUserPage(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
-    public User getUserById(Long userid){
+
+    public User getUserById(Long userid) {
         if (userid == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID, "User : id null !!");
         }
         User user = userRepository.findById(userid).orElse(null);
-        if (user==null){
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_DOES_NOT_EXIST, "User : id {"+ userid +"} does not exist !!");
+        if (user == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_DOES_NOT_EXIST, "User : id {" + userid + "} does not exist !!");
         }
         return user;
     }
@@ -65,7 +69,7 @@ public class UserController {
         return getUserById(userid);
     }
 
-    public LoginResponseModel register(RegisterModel registerModel) {
+    public Map<String, Object> register(RegisterModel registerModel) {
         if (userRepository.existsByEmail(registerModel.getEmail())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_ALREADY_EXIST, "User : Email {" + registerModel.getEmail() + "} already exist !!");
         }
@@ -83,11 +87,44 @@ public class UserController {
         user.setGender(registerModel.getGender());
         user.setWeight(registerModel.getWeight());
         user.setHeight(registerModel.getHeight());
-        user.setStatus(User.Status.NORMAL);
+        user.setStatus(User.Status.TBC);
 
-        User userregis = userRepository.save(user);
-        String token = tokenService.tokenize(userregis);
-        return new LoginResponseModel(userregis, true, token);
+        user = userRepository.save(user);
+
+        Pin pin = new Pin();
+        try {
+            pin = pinController.createPin(user, user.getEmail());
+        } catch (Exception e) {
+            userRepository.delete(user);
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("email", pin.getEmail());
+        return map;
+    }
+
+    public LoginResponseModel verifypin(LoginModel loginModel) {
+        User user = pinController.verify(loginModel.getEmail(), loginModel.getPassword());
+        user.setStatus(User.Status.NORMAL);
+        user = userRepository.save(user);
+        String token = tokenService.tokenize(user);
+        return new LoginResponseModel(user, true, token);
+    }
+
+    public Map<String, Object> pinresend(LoginModel loginModel) {
+        User user = userRepository.findByEmail(loginModel.getEmail());
+        if (user == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_DOES_NOT_EXIST, "User : Email {" + loginModel.getEmail() + "} does not exist !!");
+        }
+        if (!user.getStatus().equals(User.Status.TBC)) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_ACCOUNT_VERIFIED, "User : account verified !!");
+        }
+        Pin pin = pinController.createPin(user, user.getEmail());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("email", pin.getEmail());
+        return map;
     }
 
     public LoginResponseModel login(LoginModel loginModel) {
@@ -98,12 +135,15 @@ public class UserController {
         if (!passwordEncoder.matches(loginModel.getPassword(), user.getPassword())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
         }
+        if (user.getStatus().equals(User.Status.TBC)) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_ACCOUNT_NOT_VERIFIED, "User : account not verified !!");
+        }
         String token = tokenService.tokenize(user);
         return new LoginResponseModel(user, true, token);
     }
 
-    public Map<String, Boolean> logout(){
-        User user  = getUser();
+    public Map<String, Boolean> logout() {
+        User user = getUser();
         String token = SecurityUtil.getToken();
 
         if (token == null) {
@@ -129,8 +169,8 @@ public class UserController {
         return map;
     }
 
-    public Map<String, Object> addImgProfile(MultipartFile fileImg){
-        User user  = getUser();
+    public Map<String, Object> addImgProfile(MultipartFile fileImg) {
+        User user = getUser();
         try {
             if (user.getImage() != null) {
                 storageService.delete(user.getImage());
@@ -139,7 +179,7 @@ public class UserController {
             user.setImage(storageService.store(fileImg, s.concat(String.valueOf(user.getUserid()))));
             user = userRepository.save(user);
         } catch (Exception e) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_SAVE,"File : file cannot be saved !!");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_SAVE, "File : file cannot be saved !!");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("success", true);
@@ -148,19 +188,19 @@ public class UserController {
     }
 
     public Resource getImgProfile(User user) {
-        if(user.getImage()==null){
-            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_NO_PROFILE_IMAGE,"User : id {"+ user.getUserid() +"}  does not have a profile picture !!");
+        if (user.getImage() == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_NO_PROFILE_IMAGE, "User : id {" + user.getUserid() + "}  does not have a profile picture !!");
         }
         try {
             return storageService.loadAsResource(user.getImage());
         } catch (Exception e) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_NOT_FOUND,"File : name {"+user.getImage()+"} not found !!");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_NOT_FOUND, "File : name {" + user.getImage() + "} not found !!");
         }
     }
 
-    public User updateUser(User user,UserUpdateModel userupdate){
-        if(user.getUserid()!=userupdate.getUserid()){
-            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID,"User : id {"+ userupdate.getUserid() +"}  incorrect user id !!");
+    public User updateUser(User user, UserUpdateModel userupdate) {
+        if (user.getUserid() != userupdate.getUserid()) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID, "User : id {" + userupdate.getUserid() + "}  incorrect user id !!");
         }
         if (userRepository.existsByUsername(userupdate.getUsername()) && !userupdate.getUsername().equals(user.getUsername())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_USERNAME_ALREADY_EXIST, "User : Username {" + userupdate.getUsername() + "} already exist !!");
@@ -175,10 +215,10 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    public Map<String,Boolean> updateUserPassword(UserUpdatePasswordModel userpsw){
-        User user  = getUser();
-        if(user.getUserid()!=userpsw.getUserid()){
-            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID,"User : id {"+ userpsw.getUserid() +"}  incorrect user id !!");
+    public Map<String, Boolean> updateUserPassword(UserUpdatePasswordModel userpsw) {
+        User user = getUser();
+        if (user.getUserid() != userpsw.getUserid()) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID, "User : id {" + userpsw.getUserid() + "}  incorrect user id !!");
         }
         if (!passwordEncoder.matches(userpsw.getOldpassword(), user.getPassword())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
@@ -190,10 +230,10 @@ public class UserController {
         return map;
     }
 
-    public Map<String,Object> updateUserEmail(UserUpdateEmailModel useremail){
-        User user  = getUser();
-        if(user.getUserid()!=useremail.getUserid()){
-            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID,"User : id {"+ useremail.getUserid() +"}  incorrect user id !!");
+    public Map<String, Object> updateUserEmail(UserUpdateEmailModel useremail) {
+        User user = getUser();
+        if (user.getUserid() != useremail.getUserid()) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID, "User : id {" + useremail.getUserid() + "}  incorrect user id !!");
         }
         if (userRepository.existsByEmail(useremail.getEmail())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_ALREADY_EXIST, "User : Email {" + useremail.getEmail() + "} already exist !!");
@@ -208,10 +248,11 @@ public class UserController {
         map.put("email", user.getEmail());
         return map;
     }
-    public Map<String,Boolean> deleteUser(DeleteUserModel deleteuser){
-        User user  = getUser();
-        if(user.getUserid()!=deleteuser.getUserid()){
-            throw  new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID,"User : id {"+ deleteuser.getUserid() +"}  incorrect user id !!");
+
+    public Map<String, Boolean> deleteUser(DeleteUserModel deleteuser) {
+        User user = getUser();
+        if (user.getUserid() != deleteuser.getUserid()) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID, "User : id {" + deleteuser.getUserid() + "}  incorrect user id !!");
         }
         if (!user.getEmail().equals(deleteuser.getEmail())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_INCORRECT, "User : Email {" + deleteuser.getEmail() + "} incorrect!!");
@@ -222,11 +263,11 @@ public class UserController {
         if (!passwordEncoder.matches(deleteuser.getPassword(), user.getPassword())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
         }
-        if(user.getImage()!=null){
+        if (user.getImage() != null) {
             try {
                 storageService.delete(user.getImage());
             } catch (IOException e) {
-                throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_DELETE,"File : file cannot delete !!");
+                throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_DELETE, "File : file cannot delete !!");
             }
         }
         userRepository.delete(user);
@@ -235,7 +276,7 @@ public class UserController {
         return map;
     }
 
-    public User changestatus(User user, User.Status status){
+    public User changestatus(User user, User.Status status) {
         user.setStatus(status);
         return userRepository.save(user);
     }

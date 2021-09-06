@@ -24,6 +24,7 @@ public class SecurityUtil {
         Long userId = (Long) principal;
         return userId;
     }
+
     public static String getToken() {
         SecurityContext context = SecurityContextHolder.getContext();
         if (context == null) {

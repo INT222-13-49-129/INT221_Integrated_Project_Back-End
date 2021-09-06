@@ -12,11 +12,18 @@ import java.util.stream.Stream;
 @Service
 public interface StorageService {
     void init();
+
     String store(MultipartFile file) throws Exception;
-    String store(MultipartFile file,String fileName) throws Exception;
+
+    String store(MultipartFile file, String fileName) throws Exception;
+
     Stream<Path> loadAll() throws IOException;
+
     Path load(String fileName) throws IOException;
+
     Resource loadAsResource(String fileName) throws IOException, URISyntaxException;
+
     void deleteAll() throws IOException;
+
     void delete(String fileName) throws IOException;
 }

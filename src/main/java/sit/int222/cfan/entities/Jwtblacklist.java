@@ -9,12 +9,12 @@ import javax.persistence.ManyToOne;
 @Entity
 @Data
 public class Jwtblacklist {
-  @Id
-  private long jwtblacklistid;
-  private String token;
-  private java.sql.Timestamp exp;
+    @Id
+    private long jwtblacklistid;
+    private String token;
+    private java.sql.Timestamp exp;
 
-  @ManyToOne
-  private User user;
+    @ManyToOne
+    private User user;
 
 }

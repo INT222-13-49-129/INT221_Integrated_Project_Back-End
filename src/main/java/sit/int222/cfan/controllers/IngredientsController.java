@@ -50,9 +50,9 @@ public class IngredientsController {
         return IngredientsType.values();
     }
 
-    public Ingredients createIngredients(Ingredients newingredients){
-        if(ingredientsRepository.existsByIngredientsname(newingredients.getIngredientsname())){
-            throw new BaseException(ExceptionResponse.ERROR_CODE.INGREDIENTS_INGREDIENTSNAME_ALREADY_EXIST,"Ingredients : Ingredientsname {" + newingredients.getIngredientsname() + "} does already exist !!");
+    public Ingredients createIngredients(Ingredients newingredients) {
+        if (ingredientsRepository.existsByIngredientsname(newingredients.getIngredientsname())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.INGREDIENTS_INGREDIENTSNAME_ALREADY_EXIST, "Ingredients : Ingredientsname {" + newingredients.getIngredientsname() + "} does already exist !!");
         }
         Ingredients ingredients = new Ingredients();
         ingredients.setIngredientsname(newingredients.getIngredientsname());
@@ -63,10 +63,10 @@ public class IngredientsController {
         return ingredientsRepository.save(ingredients);
     }
 
-    public Ingredients updateIngredients(Ingredients updateingredients,Long id){
+    public Ingredients updateIngredients(Ingredients updateingredients, Long id) {
         Ingredients ingredients = findById(id);
-        if(ingredientsRepository.existsByIngredientsname(updateingredients.getIngredientsname()) && !updateingredients.getIngredientsname().equals(ingredients.getIngredientsname())){
-            throw new BaseException(ExceptionResponse.ERROR_CODE.INGREDIENTS_INGREDIENTSNAME_ALREADY_EXIST,"Ingredients : Ingredientsname {" + updateingredients.getIngredientsname() + "} does already exist !!");
+        if (ingredientsRepository.existsByIngredientsname(updateingredients.getIngredientsname()) && !updateingredients.getIngredientsname().equals(ingredients.getIngredientsname())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.INGREDIENTS_INGREDIENTSNAME_ALREADY_EXIST, "Ingredients : Ingredientsname {" + updateingredients.getIngredientsname() + "} does already exist !!");
         }
         ingredients.setIngredientsname(updateingredients.getIngredientsname());
         ingredients.setKcalpunit(updateingredients.getKcalpunit());
@@ -77,15 +77,15 @@ public class IngredientsController {
 
         List<FoodmenuHasIngredients> foodmenuHasIngredientsList = foodmenuHasIngredientsRepository.findAllByIngredients(ingredients);
         ListIterator<FoodmenuHasIngredients> iterator = foodmenuHasIngredientsList.listIterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             FoodmenuHasIngredients foodmenuHasIngredients = iterator.next();
             Foodmenu foodmenu = foodmenuController.findById(foodmenuHasIngredients.getFoodmenu().getFoodmenuid());
-            foodmenuController.updateFoodmenu(foodmenu,null,foodmenu);
+            foodmenuController.updateFoodmenu(foodmenu, null, foodmenu);
         }
         return ingredients;
     }
 
-    public Map<String,Boolean> deleteIngredients(Long id){
+    public Map<String, Boolean> deleteIngredients(Long id) {
         Ingredients ingredients = findById(id);
 
         List<FoodmenuHasIngredients> foodmenuHasIngredientsList = foodmenuHasIngredientsRepository.findAllByIngredients(ingredients);
@@ -93,10 +93,10 @@ public class IngredientsController {
 
         ingredientsRepository.delete(ingredients);
 
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             FoodmenuHasIngredients foodmenuHasIngredients = iterator.next();
             Foodmenu foodmenu = foodmenuController.findById(foodmenuHasIngredients.getFoodmenu().getFoodmenuid());
-            foodmenuController.updateFoodmenu(foodmenu,null,foodmenu);
+            foodmenuController.updateFoodmenu(foodmenu, null, foodmenu);
         }
 
         HashMap<String, Boolean> map = new HashMap<>();

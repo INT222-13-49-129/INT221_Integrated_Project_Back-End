@@ -33,10 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().antMatchers("/api/general/**").permitAll()
-                .antMatchers("/api/user/**").hasAnyAuthority("NORMAL","ADMIN")
+                .and().authorizeRequests().antMatchers("/actuator/**", "/api/general/**").permitAll()
+                .antMatchers("/api/user/**").hasAnyAuthority("NORMAL", "ADMIN")
                 .antMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
-                .and().apply(new TokenFilterConfiguerer(tokenService,jwtblacklistRepository));
+                .and().apply(new TokenFilterConfiguerer(tokenService, jwtblacklistRepository));
     }
 }

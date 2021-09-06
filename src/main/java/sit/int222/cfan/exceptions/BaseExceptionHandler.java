@@ -14,7 +14,7 @@ public class BaseExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<Object> handleExceptions(BaseException exception, WebRequest webRequest) {
         ExceptionResponse response =
-                new ExceptionResponse(exception.getErrorCode(),exception.getMessage(), LocalDateTime.now());
+                new ExceptionResponse(exception.getErrorCode(), exception.getMessage(), LocalDateTime.now());
         ResponseEntity<Object> entity = new ResponseEntity<>(response, HttpStatus.I_AM_A_TEAPOT);
         return entity;
     }

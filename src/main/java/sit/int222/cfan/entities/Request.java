@@ -24,11 +24,11 @@ public class Request {
     @ManyToOne
     private User user;
 
-    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
     @PrimaryKeyJoinColumn
     private Ingredientsreq ingredientsreq;
 
-    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
     @PrimaryKeyJoinColumn
     private Foodtypereq foodtypereq;
 

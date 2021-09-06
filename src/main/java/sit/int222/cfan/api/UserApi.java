@@ -68,7 +68,7 @@ public class UserApi {
 
     @PutMapping("/update")
     public User updateUser(@RequestPart UserUpdateModel userupdate) {
-        return userController.updateUser(userController.getUser(),userupdate);
+        return userController.updateUser(userController.getUser(), userupdate);
     }
 
     @PutMapping("/update/psw")
@@ -165,12 +165,12 @@ public class UserApi {
 
     @PostMapping(value = "/meal/add")
     public Meal createMeal(@RequestPart Meal newmeal) {
-        return mealController.createMeal(userController.getUser(),newmeal);
+        return mealController.createMeal(userController.getUser(), newmeal);
     }
 
     @PutMapping(value = "/meal/edit/{id}")
     public Meal updateMeal(@RequestPart Meal updatemeal, @PathVariable Long id) {
-        return mealController.updateMeal(userController.getUser(),updatemeal, id);
+        return mealController.updateMeal(userController.getUser(), updatemeal, id);
     }
 
     @DeleteMapping("/meal/delete/{id}")
@@ -190,7 +190,7 @@ public class UserApi {
 
     @PostMapping(value = "/request/add")
     public Request createRequest(@RequestPart Request newrequest) {
-        return requestController.createRequest(userController.getUser(),newrequest);
+        return requestController.createRequest(userController.getUser(), newrequest);
     }
 
     @DeleteMapping("/request/delete/{id}")

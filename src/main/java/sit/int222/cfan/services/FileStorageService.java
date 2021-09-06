@@ -44,29 +44,29 @@ public class FileStorageService implements StorageService {
     public String store(MultipartFile file) throws Exception {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         int extPos = fileName.lastIndexOf(".");
-        if(extPos > 0){
-            fileName = file.getOriginalFilename().substring(0,extPos);
+        if (extPos > 0) {
+            fileName = file.getOriginalFilename().substring(0, extPos);
         }
-        return store(file,fileName);
+        return store(file, fileName);
     }
 
     @Override
     public String store(MultipartFile file, String fileName) throws Exception {
         int extPos = file.getOriginalFilename().lastIndexOf(".");
-        if(extPos > 0){
-            fileName += generateString()+file.getOriginalFilename().substring(extPos).toLowerCase();
+        if (extPos > 0) {
+            fileName += generateString() + file.getOriginalFilename().substring(extPos).toLowerCase();
         }
         try {
-            if(file.isEmpty()){
-                throw new IOException("file : "+ fileName +" is Empty");
+            if (file.isEmpty()) {
+                throw new IOException("file : " + fileName + " is Empty");
             }
-            if(fileName.contains("..")){
-                throw new IOException("fileName : "+ fileName +" is relative path");
+            if (fileName.contains("..")) {
+                throw new IOException("fileName : " + fileName + " is relative path");
             }
-            try(InputStream inputStream = file.getInputStream()){
-                Files.copy(inputStream,this.rootLocation.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, this.rootLocation.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new Exception(e);
         }
         return fileName;
@@ -82,8 +82,8 @@ public class FileStorageService implements StorageService {
     public Path load(String fileName) throws IOException {
         Path path = this.rootLocation.resolve(fileName);
         File file = new File(String.valueOf(path.toString()));
-        if(!file.isFile()){
-            throw new IOException("file : "+ fileName +" is does not exist!!");
+        if (!file.isFile()) {
+            throw new IOException("file : " + fileName + " is does not exist!!");
         }
         return path;
     }
@@ -92,7 +92,7 @@ public class FileStorageService implements StorageService {
     public Resource loadAsResource(String fileName) throws IOException {
         try {
             Resource resource = new UrlResource(load(fileName).toUri());
-            if(resource.exists()) {
+            if (resource.exists()) {
                 return resource;
             } else {
                 throw new FileNotFoundException("File not found " + fileName);
@@ -117,6 +117,6 @@ public class FileStorageService implements StorageService {
 
     public static String generateString() {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-        return "-"+uuid;
+        return "-" + uuid;
     }
 }
