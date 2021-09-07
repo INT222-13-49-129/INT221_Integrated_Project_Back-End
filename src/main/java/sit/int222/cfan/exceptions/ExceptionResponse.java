@@ -25,6 +25,7 @@ public class ExceptionResponse {
         USER_IS_NULL(2011),
         USER_ACCOUNT_NOT_VERIFIED(2012),
         USER_ACCOUNT_VERIFIED(2013),
+        USER_PASSWORD_IS_NULL(2014),
 
         FILE_SUBMITTED_NOT_FOUND(3001),
         FILE_CAN_NOT_SAVE(3002),

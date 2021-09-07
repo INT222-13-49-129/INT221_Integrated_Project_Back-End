@@ -48,7 +48,7 @@ public class PinController {
         return pinRepository.save(pin);
     }
 
-    public User verify(String email, String pinCode) {
+    public void verify(String email, String pinCode) {
         Pin pin = pinRepository.findByEmail(email);
         if (pin == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.PIN_EMAIL_DOES_NOT_EXIST, "Pin : Email {" + email + "} does not exist !!");
@@ -64,13 +64,6 @@ public class PinController {
         if (!passwordEncoder.matches(pinCode, pin.getPincode())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.PIN_PINCODE_INCORRECT, "Pin : Pin code incorrect !!");
         }
-
-        User user = pin.getUser();
-        if (user == null) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_IS_NULL, "User : User is null !!");
-        }
-
         pinRepository.delete(pin);
-        return user;
     }
 }

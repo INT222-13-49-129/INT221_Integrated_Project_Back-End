@@ -69,6 +69,14 @@ public class UserController {
         return getUserById(userid);
     }
 
+    public Map<String, Object> createPin(User user,String email){
+        Pin pin = pinController.createPin(user, email);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("email", pin.getEmail());
+        return map;
+    }
+
     public Map<String, Object> register(RegisterModel registerModel) {
         if (userRepository.existsByEmail(registerModel.getEmail())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_ALREADY_EXIST, "User : Email {" + registerModel.getEmail() + "} already exist !!");
@@ -91,40 +99,61 @@ public class UserController {
 
         user = userRepository.save(user);
 
-        Pin pin = new Pin();
         try {
-            pin = pinController.createPin(user, user.getEmail());
+            return createPin(user,user.getEmail());
         } catch (Exception e) {
             userRepository.delete(user);
         }
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("success", true);
-        map.put("email", pin.getEmail());
-        return map;
+        return (Map<String, Object>) new HashMap<>().put("success",false);
     }
 
-    public LoginResponseModel verifypin(LoginModel loginModel) {
-        User user = pinController.verify(loginModel.getEmail(), loginModel.getPassword());
+    public LoginResponseModel verifypin(PinModel pinModel) {
+        User user = userRepository.findByEmail(pinModel.getEmail());
+        if (user == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_DOES_NOT_EXIST, "User : Email {" + pinModel.getEmail() + "} does not exist !!");
+        }
+        pinController.verify(pinModel.getEmail(), pinModel.getPin());
         user.setStatus(User.Status.NORMAL);
         user = userRepository.save(user);
         String token = tokenService.tokenize(user);
         return new LoginResponseModel(user, true, token);
     }
 
-    public Map<String, Object> pinresend(LoginModel loginModel) {
-        User user = userRepository.findByEmail(loginModel.getEmail());
+    public Map<String, Object> pinresend(PinModel pinModel) {
+        User user = userRepository.findByEmail(pinModel.getEmail());
         if (user == null) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_DOES_NOT_EXIST, "User : Email {" + loginModel.getEmail() + "} does not exist !!");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_DOES_NOT_EXIST, "User : Email {" + pinModel.getEmail() + "} does not exist !!");
         }
         if (!user.getStatus().equals(User.Status.TBC)) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_ACCOUNT_VERIFIED, "User : account verified !!");
         }
-        Pin pin = pinController.createPin(user, user.getEmail());
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("success", true);
-        map.put("email", pin.getEmail());
-        return map;
+        return createPin(user,user.getEmail());
+    }
+
+    public Map<String, Object> pinforgotpass(PinModel pinModel) {
+        User user = userRepository.findByEmail(pinModel.getEmail());
+        if (user == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_DOES_NOT_EXIST, "User : Email {" + pinModel.getEmail() + "} does not exist !!");
+        }
+        if (user.getStatus().equals(User.Status.TBC)) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_ACCOUNT_NOT_VERIFIED, "User : account not verified !!");
+        }
+        return createPin(user,user.getEmail());
+    }
+
+    public LoginResponseModel verifypinforgotpass(PinModel pinModel) {
+        User user = userRepository.findByEmail(pinModel.getEmail());
+        if (user == null) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_DOES_NOT_EXIST, "User : Email {" + pinModel.getEmail() + "} does not exist !!");
+        }
+        pinController.verify(pinModel.getEmail(), pinModel.getPin());
+        if(pinModel.getPassword() == null){
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_IS_NULL, "User : password is null !!");
+        }
+        user.setPassword(passwordEncoder.encode(pinModel.getPassword()));
+        user = userRepository.save(user);
+        String token = tokenService.tokenize(user);
+        return new LoginResponseModel(user, true, token);
     }
 
     public LoginResponseModel login(LoginModel loginModel) {
@@ -241,12 +270,14 @@ public class UserController {
         if (!passwordEncoder.matches(useremail.getPassword(), user.getPassword())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
         }
-        user.setEmail(useremail.getEmail());
-        user = userRepository.save(user);
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("success", true);
-        map.put("email", user.getEmail());
-        return map;
+        return createPin(user,useremail.getEmail());
+    }
+
+    public User verifypinEmail(PinModel pinModel) {
+        User user = getUser();
+        pinController.verify(pinModel.getEmail(), pinModel.getPin());
+        user.setEmail(pinModel.getEmail());
+        return userRepository.save(user);
     }
 
     public Map<String, Boolean> deleteUser(DeleteUserModel deleteuser) {

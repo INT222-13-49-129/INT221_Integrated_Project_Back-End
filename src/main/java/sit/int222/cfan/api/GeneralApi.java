@@ -19,6 +19,7 @@ import sit.int222.cfan.entities.Ingredients;
 import sit.int222.cfan.entities.IngredientsType;
 import sit.int222.cfan.models.LoginModel;
 import sit.int222.cfan.models.LoginResponseModel;
+import sit.int222.cfan.models.PinModel;
 import sit.int222.cfan.models.RegisterModel;
 
 import java.util.List;
@@ -122,13 +123,23 @@ public class GeneralApi {
     }
 
     @PostMapping("/pin/verify")
-    public LoginResponseModel pinverify(@RequestPart LoginModel emailpin) {
+    public LoginResponseModel pinverify(@RequestPart PinModel emailpin) {
         return userController.verifypin(emailpin);
     }
 
     @PostMapping("/pin/resend")
-    public ResponseEntity<Map> pinresend(@RequestPart LoginModel email) {
+    public ResponseEntity<Map> pinresend(@RequestPart PinModel email) {
         return ResponseEntity.ok(userController.pinresend(email));
+    }
+
+    @PostMapping("/pin/forgotpass")
+    public ResponseEntity<Map> pinforgotpass(@RequestPart PinModel email) {
+        return ResponseEntity.ok(userController.pinforgotpass(email));
+    }
+
+    @PostMapping("/pin/verify/forgotpass")
+    public LoginResponseModel pinverifyforgotpass(@RequestPart PinModel emailpinpass) {
+        return userController.verifypinforgotpass(emailpinpass);
     }
 
     @PostMapping("/login")

@@ -21,10 +21,7 @@ import sit.int222.cfan.entities.Request;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
-import sit.int222.cfan.models.DeleteUserModel;
-import sit.int222.cfan.models.UserUpdateEmailModel;
-import sit.int222.cfan.models.UserUpdateModel;
-import sit.int222.cfan.models.UserUpdatePasswordModel;
+import sit.int222.cfan.models.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -79,6 +76,11 @@ public class UserApi {
     @PutMapping("/update/email")
     public ResponseEntity<Map> updateUserEmail(@RequestPart UserUpdateEmailModel useremail) {
         return ResponseEntity.ok(userController.updateUserEmail(useremail));
+    }
+
+    @PostMapping("/update/email/verify")
+    public User pinverify(@RequestPart PinModel emailpin) {
+        return userController.verifypinEmail(emailpin);
     }
 
     @DeleteMapping("/delete")
