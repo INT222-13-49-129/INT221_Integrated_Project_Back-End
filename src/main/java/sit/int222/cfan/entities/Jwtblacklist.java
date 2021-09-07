@@ -1,5 +1,6 @@
 package sit.int222.cfan.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ public class Jwtblacklist {
     private String token;
     private java.sql.Timestamp exp;
 
+    @JsonBackReference(value = "user-jwt")
     @ManyToOne
     private User user;
 
