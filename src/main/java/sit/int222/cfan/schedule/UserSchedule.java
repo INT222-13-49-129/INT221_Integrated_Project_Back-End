@@ -20,7 +20,7 @@ public class UserSchedule {
     @Autowired
     PinRepository pinRepository;
 
-    public Timestamp getCurrentTime(){
+    public Timestamp getCurrentTime() {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Bangkok"));
         Date date = calendar.getTime();
         return new Timestamp(date.getTime());
@@ -30,7 +30,7 @@ public class UserSchedule {
     public void deleteJwtblacklist() {
         List<Jwtblacklist> jwtblacklists = jwtblacklistRepository.findAllByExpLessThan(getCurrentTime());
         ListIterator<Jwtblacklist> iterator = jwtblacklists.listIterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Jwtblacklist jwtblacklist = iterator.next();
             log.info("deleteJwtblacklist :" + jwtblacklist.getJwtblacklistid() + " " + jwtblacklist.getExp());
         }
@@ -41,9 +41,9 @@ public class UserSchedule {
     public void deletePin() {
         List<Pin> pinList = pinRepository.findAllByExpLessThan(getCurrentTime());
         ListIterator<Pin> iterator = pinList.listIterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Pin pin = iterator.next();
-            log.info("deletePin :" + pin.getPinid() +" "+ pin.getExp());
+            log.info("deletePin :" + pin.getPinid() + " " + pin.getExp());
         }
         pinRepository.deleteAll(pinList);
     }
