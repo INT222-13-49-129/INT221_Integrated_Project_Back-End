@@ -18,17 +18,17 @@ spring:
         dialect: MySQL5InnoDBDialect
         use-new-id-generator-mappings: false
 
- mail:
-  host: smtp.gmail.com
-  port: 587
-  username: cfanint222test
-  password: rotmpdzovxpdwiom
-  properties: 
-    mail:
-      smtp: 
-        auth: true
-      starttls:
-        enable: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cfanint222test
+    password: rotmpdzovxpdwiom
+    properties:
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
 
   servlet: 
     multipart: 
