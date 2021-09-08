@@ -1,8 +1,9 @@
-package sit.int222.cfan.controllers;
+package sit.int222.cfan.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sit.int222.cfan.controllers.EmailController;
 import sit.int222.cfan.entities.Pin;
 import sit.int222.cfan.entities.User;
 import sit.int222.cfan.exceptions.BaseException;
@@ -16,7 +17,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Service
-public class PinController {
+public class PinService {
     @Autowired
     PinRepository pinRepository;
     @Autowired

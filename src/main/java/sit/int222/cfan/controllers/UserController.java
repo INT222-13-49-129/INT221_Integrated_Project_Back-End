@@ -16,6 +16,7 @@ import sit.int222.cfan.exceptions.ExceptionResponse;
 import sit.int222.cfan.models.*;
 import sit.int222.cfan.repositories.JwtblacklistRepository;
 import sit.int222.cfan.repositories.UserRepository;
+import sit.int222.cfan.services.PinService;
 import sit.int222.cfan.services.StorageService;
 import sit.int222.cfan.services.TokenService;
 import sit.int222.cfan.util.SecurityUtil;
@@ -40,7 +41,7 @@ public class UserController {
     @Autowired
     StorageService storageService;
     @Autowired
-    PinController pinController;
+    PinService pinService;
 
     public List<User> getUserAll() {
         return userRepository.findAll();
@@ -70,7 +71,7 @@ public class UserController {
     }
 
     public Map<String, Object> createPin(User user, String email) {
-        Pin pin = pinController.createPin(user, email);
+        Pin pin = pinService.createPin(user, email);
         HashMap<String, Object> map = new HashMap<>();
         map.put("success", true);
         map.put("email", pin.getEmail());
@@ -112,7 +113,7 @@ public class UserController {
         if (user == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_DOES_NOT_EXIST, "User : Email {" + pinModel.getEmail() + "} does not exist !!");
         }
-        pinController.verify(pinModel.getEmail(), pinModel.getPin());
+        pinService.verify(pinModel.getEmail(), pinModel.getPin());
         user.setStatus(User.Status.NORMAL);
         user = userRepository.save(user);
         String token = tokenService.tokenize(user);
@@ -146,7 +147,7 @@ public class UserController {
         if (user == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_DOES_NOT_EXIST, "User : Email {" + pinModel.getEmail() + "} does not exist !!");
         }
-        pinController.verify(pinModel.getEmail(), pinModel.getPin());
+        pinService.verify(pinModel.getEmail(), pinModel.getPin());
         if (pinModel.getPassword() == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_IS_NULL, "User : password is null !!");
         }
@@ -275,7 +276,7 @@ public class UserController {
 
     public User verifypinEmail(PinModel pinModel) {
         User user = getUser();
-        pinController.verify(pinModel.getEmail(), pinModel.getPin());
+        pinService.verify(pinModel.getEmail(), pinModel.getPin());
         user.setEmail(pinModel.getEmail());
         return userRepository.save(user);
     }
