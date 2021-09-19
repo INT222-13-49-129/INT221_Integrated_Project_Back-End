@@ -5,7 +5,7 @@ services:
     build: .
     image: backend
     environment:
-      - MYSQL_DATABASE=CFAN
+      - MYSQL_DATABASE=CFANDB
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD=kamin124712
     volumes:
