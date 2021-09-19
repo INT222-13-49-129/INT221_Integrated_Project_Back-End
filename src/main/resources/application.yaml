@@ -2,25 +2,20 @@ server:
   port: 3000
 
 spring:
-<<<<<<< HEAD
   datasource: 
     url: jdbc:mysql:http://13.76.27.34:3306/cfandb
     username: root
     password: kamin124712
 
-=======
->>>>>>> f572540580b1c5fa7ff911d15b8ff79602cf6163
   sql: 
     init: 
       platform: mysql
       mode: always
-
   jpa:
     database-platform=org:
       hibernate:
         dialect: MySQL5InnoDBDialect
         use-new-id-generator-mappings: false
-
   servlet: 
     multipart: 
       enabled: true
@@ -28,7 +23,6 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
 
-<<<<<<< HEAD
 cfan:
   email:
     from: cfanint222test@gmail.com
@@ -40,7 +34,5 @@ cfan:
   origin: 
     host: http://localhost:8080,http://13.76.27.34:8080,http://13.76.27.34
     method: GET,POST,PUT,HEAD,DELETE,PATCH,OPTIONS
-=======
   profiles:
     active: dev
->>>>>>> f572540580b1c5fa7ff911d15b8ff79602cf6163
