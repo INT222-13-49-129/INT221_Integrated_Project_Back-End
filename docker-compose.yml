@@ -1,0 +1,22 @@
+version: "3"
+services:
+  backend:
+    container_name: backend
+    build: .
+    image: backend
+    environment:
+      - MYSQL_DATABASE=carsdb
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=Newnismo_2001
+    volumes:
+      - ~/backend_data:/public/product-img
+    networks:
+      docker_network:
+        ipv4_address: 172.22.0.3
+
+networks:
+  default:
+    external:
+      name: allnetwork
+  docker_network:
+    external: true
