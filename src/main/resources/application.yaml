@@ -2,11 +2,6 @@ server:
   port: 8000
 
 spring:
-  datasource: 
-    url: jdbc:mysql://localhost:3306/cfandb
-    username: root
-    password: kamin124712
-
   sql: 
     init: 
       platform: mysql
@@ -18,18 +13,6 @@ spring:
         dialect: MySQL5InnoDBDialect
         use-new-id-generator-mappings: false
 
- mail:
-  host: smtp.gmail.com
-  port: 587
-  username: cfanint222test
-  password: rotmpdzovxpdwiom
-  properties: 
-    mail:
-      smtp: 
-        auth: true
-      starttls:
-        enable: true
-
   servlet: 
     multipart: 
       enabled: true
@@ -37,14 +20,5 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
 
-cfan:
-  email:
-    from: cfanint222test@gmail.com
-  token:
-    secret: secretfordev 
-    issuer: cfanBackend
-  storage: 
-    location: ./public/img
-  origin: 
-    host: http://localhost:8080
-    method: GET,POST,PUT,HEAD,DELETE,PATCH,OPTIONS
+  profiles:
+    active: dev
