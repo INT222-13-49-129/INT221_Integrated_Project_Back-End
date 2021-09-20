@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 3000
 
 spring:
   datasource: 
@@ -46,5 +46,5 @@ cfan:
   storage: 
     location: ./public/img
   origin: 
-    host: http://localhost:8080
+    host: http://localhost:8080,http://13.76.27.34:8080,http://13.76.27.34
     method: GET,POST,PUT,HEAD,DELETE,PATCH,OPTIONS
