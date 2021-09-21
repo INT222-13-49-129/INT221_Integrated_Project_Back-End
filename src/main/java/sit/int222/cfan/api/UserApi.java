@@ -45,7 +45,7 @@ public class UserApi {
         return userController.getUser();
     }
 
-    @PostMapping("/logout")
+    @DeleteMapping("/logout")
     public ResponseEntity<Map> logout() {
         return ResponseEntity.ok(userController.logout());
     }
