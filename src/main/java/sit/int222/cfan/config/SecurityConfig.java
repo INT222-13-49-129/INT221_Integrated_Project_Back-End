@@ -28,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] methodList;
     @Value("#{'${cfan.origin.host}'.split(',')}")
     private String[] hostList;
+    @Value("#{'${cfan.origin.header}'.split(',')}")
+    private String[] headerList;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -47,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     cors.setAllowCredentials(true);
                     cors.setAllowedOrigins(Arrays.asList(hostList));
                     cors.setAllowedMethods(Arrays.asList(methodList));
+                    cors.setAllowedHeaders(Arrays.asList(headerList));
 
                     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                     source.registerCorsConfiguration("/**", cors);
