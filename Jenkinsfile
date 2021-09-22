@@ -5,9 +5,18 @@ pipeline {
 
         stage('stop and remove container, image') {
             steps {
-                sh 'docker stop backend'
-                sh 'docker rm backend'
-                sh 'docker image rm backend'
+                script {
+                    def imageExists = sh(script: 'docker images -q backend', returnStdout: true) == ""
+                    println imageExists
+
+                    if( !imageExists ){
+                           sh 'docker stop backend'
+                           sh 'docker rm backend'
+                           sh 'docker image rm backend'
+                    }else {
+                        echo 'Skip this stage '
+                    }
+                }
             }
         }
 
