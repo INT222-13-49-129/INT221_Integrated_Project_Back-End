@@ -10,7 +10,11 @@ import java.io.Serializable;
 @Data
 public class FoodmenuHasIngredientsKey implements Serializable {
 
-    @Column(name = "Foodmenu_Foodmenuid")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2875387016069320017L;
+	@Column(name = "Foodmenu_Foodmenuid")
     private long foodmenuFoodmenuid;
     @Column(name = "Ingredients_Ingredientsid")
     private long ingredientsIngredientsid;

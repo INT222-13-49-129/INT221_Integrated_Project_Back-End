@@ -46,12 +46,12 @@ public class UserApi {
     }
 
     @DeleteMapping("/logout")
-    public ResponseEntity<Map> logout() {
+    public ResponseEntity<Map<String, Boolean>> logout() {
         return ResponseEntity.ok(userController.logout());
     }
 
     @PostMapping(value = "/addimgprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Map> addImgProfile(@RequestParam(value = "file", required = false) MultipartFile fileImg) {
+    public ResponseEntity<Map<String, Object>> addImgProfile(@RequestParam(value = "file", required = false) MultipartFile fileImg) {
         if (fileImg == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_SUBMITTED_NOT_FOUND, "File : submitted file was not found");
         }
@@ -69,12 +69,12 @@ public class UserApi {
     }
 
     @PutMapping("/update/psw")
-    public ResponseEntity<Map> updateUserPassword(@RequestPart UserUpdatePasswordModel userpsw) {
+    public ResponseEntity<Map<String, Boolean>> updateUserPassword(@RequestPart UserUpdatePasswordModel userpsw) {
         return ResponseEntity.ok(userController.updateUserPassword(userpsw));
     }
 
     @PutMapping("/update/email")
-    public ResponseEntity<Map> updateUserEmail(@RequestPart UserUpdateEmailModel useremail) {
+    public ResponseEntity<Map<String, Object>> updateUserEmail(@RequestPart UserUpdateEmailModel useremail) {
         return ResponseEntity.ok(userController.updateUserEmail(useremail));
     }
 
@@ -84,7 +84,7 @@ public class UserApi {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Map> deleteUser(@RequestPart DeleteUserModel userdelete) {
+    public ResponseEntity<Map<String, Boolean>> deleteUser(@RequestPart DeleteUserModel userdelete) {
         return ResponseEntity.ok(userController.deleteUser(userdelete));
     }
 
@@ -141,7 +141,7 @@ public class UserApi {
     }
 
     @DeleteMapping("/foodmenu/delete/{id}")
-    public ResponseEntity<Map> deleteFoodmenu(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteFoodmenu(@PathVariable Long id) {
         return ResponseEntity.ok(foodmenuController.deleteFoodmenuUser(userController.getUser(), id));
     }
 
@@ -176,7 +176,7 @@ public class UserApi {
     }
 
     @DeleteMapping("/meal/delete/{id}")
-    public ResponseEntity<Map> deleteMeal(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteMeal(@PathVariable Long id) {
         return ResponseEntity.ok(mealController.deleteMeal(userController.getUser(), id));
     }
 
@@ -196,7 +196,7 @@ public class UserApi {
     }
 
     @DeleteMapping("/request/delete/{id}")
-    public ResponseEntity<Map> deleteRequest(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteRequest(@PathVariable Long id) {
         return ResponseEntity.ok(requestController.deleteRequestUser(userController.getUser(), id));
     }
 }

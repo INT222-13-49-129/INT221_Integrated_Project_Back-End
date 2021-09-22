@@ -118,7 +118,7 @@ public class AdminApi {
     }
 
     @DeleteMapping("/foodmenu/delete/{id}")
-    public ResponseEntity<Map> deleteFoodmenu(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteFoodmenu(@PathVariable Long id) {
         return ResponseEntity.ok(foodmenuController.deleteFoodmenuId(id));
     }
 
@@ -133,7 +133,7 @@ public class AdminApi {
     }
 
     @DeleteMapping("/ingredients/delete/{id}")
-    public ResponseEntity<Map> deleteIngredients(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteIngredients(@PathVariable Long id) {
         return ResponseEntity.ok(ingredientsController.deleteIngredients(id));
     }
 
@@ -148,7 +148,7 @@ public class AdminApi {
     }
 
     @DeleteMapping("/foodtype/delete/{id}")
-    public ResponseEntity<Map> deleteFoodtype(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteFoodtype(@PathVariable Long id) {
         return ResponseEntity.ok(foodtypeController.deleteFoodtype(id));
     }
 
@@ -173,7 +173,7 @@ public class AdminApi {
     }
 
     @DeleteMapping("/request/delete/{id}")
-    public ResponseEntity<Map> deleteRequest(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteRequest(@PathVariable Long id) {
         return ResponseEntity.ok(requestController.deleteRequestId(id));
     }
 }

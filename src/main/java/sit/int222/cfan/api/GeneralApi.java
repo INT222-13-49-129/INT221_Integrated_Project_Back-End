@@ -118,7 +118,7 @@ public class GeneralApi {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map> register(@RequestPart RegisterModel regis) {
+    public ResponseEntity<Map<String, Object>> register(@RequestPart RegisterModel regis) {
         return ResponseEntity.ok(userController.register(regis));
     }
 
@@ -128,12 +128,12 @@ public class GeneralApi {
     }
 
     @PostMapping("/pin/resend")
-    public ResponseEntity<Map> pinresend(@RequestPart PinModel email) {
+    public ResponseEntity<Map<String, Object>> pinresend(@RequestPart PinModel email) {
         return ResponseEntity.ok(userController.pinresend(email));
     }
 
     @PostMapping("/pin/forgotpass")
-    public ResponseEntity<Map> pinforgotpass(@RequestPart PinModel email) {
+    public ResponseEntity<Map<String, Object>> pinforgotpass(@RequestPart PinModel email) {
         return ResponseEntity.ok(userController.pinforgotpass(email));
     }
 
