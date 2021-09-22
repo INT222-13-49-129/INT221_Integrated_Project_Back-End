@@ -20,4 +20,4 @@ spring:
       max-request-size: 215MB
 
   profiles:
-    active: dev
+    active: test
