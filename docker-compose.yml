@@ -11,12 +11,12 @@ services:
     volumes:
       - ~/backend_data:/public/product-img
     networks:
-      docker_network:
+      allnetwork:
         ipv4_address: 172.20.0.3
 
 networks:
   default:
     external:
       name: allnetwork
-  docker_network:
+  allnetwork:
     external: true
