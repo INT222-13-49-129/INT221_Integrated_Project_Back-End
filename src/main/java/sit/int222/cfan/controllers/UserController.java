@@ -80,7 +80,16 @@ public class UserController {
 
     public Map<String, Object> register(RegisterModel registerModel) {
         if (userRepository.existsByEmail(registerModel.getEmail())) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_ALREADY_EXIST, "User : Email {" + registerModel.getEmail() + "} already exist !!");
+            User ouser = userRepository.findByEmail(registerModel.getEmail());
+            if (ouser.getStatus().equals(User.Status.TBC)) {
+                if(registerModel.isRepeat()){
+                    userRepository.delete(ouser);
+                } else {
+                throw new BaseException(ExceptionResponse.ERROR_CODE.USER_ACCOUNT_NOT_VERIFIED, "User : Email {" + registerModel.getEmail() + "} in process verified !!");
+                }
+            } else {
+                throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_ALREADY_EXIST, "User : Email {" + registerModel.getEmail() + "} already exist !!");
+            }
         }
         if (userRepository.existsByUsername(registerModel.getUsername())) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.USER_USERNAME_ALREADY_EXIST, "User : Username {" + registerModel.getUsername() + "} already exist !!");

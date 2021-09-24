@@ -14,4 +14,5 @@ public class RegisterModel {
     private User.Gender gender;
     private double weight;
     private double height;
+    private boolean repeat;
 }
