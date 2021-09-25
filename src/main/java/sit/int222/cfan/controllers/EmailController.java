@@ -18,11 +18,11 @@ public class EmailController {
     EmailService emailService;
 
     public void sendPinEmail(String email, String name, String pin) {
-        String html;
+        String html = "";
         try {
             html = readEmailTemplate("email-send-pin.html");
         } catch (IOException e) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.EMAIL_TEMPLATE_NOT_FOUND, "EMAIL : Email template not found !!");
+            throw new BaseException(ExceptionResponse.ERROR_CODE.EMAIL_TEMPLATE_NOT_FOUND, "EMAIL : Email template "+ html +" not found !!");
         }
 
         html = html.replace("${NAME}", name);
