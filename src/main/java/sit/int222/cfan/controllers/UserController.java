@@ -113,8 +113,8 @@ public class UserController {
             return createPin(user, user.getEmail());
         } catch (Exception e) {
             userRepository.delete(user);
+            throw e;
         }
-        return (Map<String, Object>) new HashMap<>().put("success", false);
     }
 
     public LoginResponseModel verifypin(PinModel pinModel) {
