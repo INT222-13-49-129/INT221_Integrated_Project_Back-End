@@ -122,6 +122,17 @@ public class UserApi {
         return foodmenuController.findPageFoodtypeUser(userController.getUser(), foodtypeId, pageable);
     }
 
+    @GetMapping("/foodmenu/page/search/foodtype")
+    public Page<Foodmenu> foodmenusWithPageSearchFoodtype(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "20") Integer pageSize,
+            @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "") String searchData,
+            @RequestParam(defaultValue = "0") Long foodtypeId) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        return foodmenuController.findPageSearchFoodtypeUser(userController.getUser(), searchData, foodtypeId, pageable);
+    }
+
     @GetMapping("/foodmenu/{id}")
     public Foodmenu foodmenu(@PathVariable Long id) {
         return foodmenuController.findByIdUser(userController.getUser(), id);

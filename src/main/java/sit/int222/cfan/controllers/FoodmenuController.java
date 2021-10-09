@@ -55,11 +55,21 @@ public class FoodmenuController {
     }
 
     public Page<Foodmenu> findPageSearchPUBLISH(String search, Pageable pageable) {
+        search = search.replace("\\","\\\\");
+        search = search.replace("_","\\_");
+        search = search.replace("%","\\%");
         return foodmenuRepository.findSearch(Foodmenu.FoodmenuStatus.PUBLISH, search, pageable);
     }
 
     public Page<Foodmenu> findPageFoodtypePUBLISH(Long foodtypeId, Pageable pageable) {
         return foodmenuRepository.findAllByFoodtypeId(Foodmenu.FoodmenuStatus.PUBLISH, foodtypeId, pageable);
+    }
+
+    public Page<Foodmenu> findPageSearchFoodtypePUBLISH(String search, Long foodtypeId, Pageable pageable) {
+        search = search.replace("\\","\\\\");
+        search = search.replace("_","\\_");
+        search = search.replace("%","\\%");
+        return foodmenuRepository.findSearchFoodtype(Foodmenu.FoodmenuStatus.PUBLISH, search, foodtypeId, pageable);
     }
 
     public Foodmenu findByIdPUBLISH(Long id) {
@@ -79,11 +89,21 @@ public class FoodmenuController {
     }
 
     public Page<Foodmenu> findPageSearchUser(User user, String search, Pageable pageable) {
+        search = search.replace("\\","\\\\");
+        search = search.replace("_","\\_");
+        search = search.replace("%","\\%");
         return foodmenuRepository.findAllByFoodnameContainingOrDescriptionContainingAndUser(user, search, pageable);
     }
 
     public Page<Foodmenu> findPageFoodtypeUser(User user, Long foodtypeId, Pageable pageable) {
         return foodmenuRepository.findAllByFoodtypeIdUser(user, foodtypeId, pageable);
+    }
+
+    public Page<Foodmenu> findPageSearchFoodtypeUser(User user, String search, Long foodtypeId, Pageable pageable) {
+        search = search.replace("\\","\\\\");
+        search = search.replace("_","\\_");
+        search = search.replace("%","\\%");
+        return foodmenuRepository.findAllByFoodnameContainingOrDescriptionContainingAndFoodtypeAndUser(user, search, foodtypeId, pageable);
     }
 
     public Foodmenu findByIdUser(User user, Long id) {

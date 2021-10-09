@@ -20,6 +20,9 @@ public interface FoodmenuRepository extends JpaRepository<Foodmenu, Long> {
     @Query("select f from Foodmenu as f where f.foodmenustatus = ?1 and f.foodtype.foodtypeid = ?2")
     Page<Foodmenu> findAllByFoodtypeId(Foodmenu.FoodmenuStatus foodmenuStatus, Long foodtypeId, Pageable pageable);
 
+    @Query(value = "SELECT f FROM Foodmenu as f where f.foodmenustatus = ?1 and (f.foodname like %?2% or f.description like %?2%) and f.foodtype.foodtypeid = ?3")
+    Page<Foodmenu> findSearchFoodtype(Foodmenu.FoodmenuStatus foodmenuStatus, String searchData, Long foodtypeId, Pageable pageable);
+
     Foodmenu findByFoodmenuidAndFoodmenustatus(Long id, Foodmenu.FoodmenuStatus foodmenuStatus);
 
     List<Foodmenu> findAllByUser(User user);
@@ -31,6 +34,9 @@ public interface FoodmenuRepository extends JpaRepository<Foodmenu, Long> {
 
     @Query("select f from Foodmenu as f where f.user = ?1 and f.foodtype.foodtypeid = ?2")
     Page<Foodmenu> findAllByFoodtypeIdUser(User user, Long foodtypeId, Pageable pageable);
+
+    @Query(value = "SELECT f FROM Foodmenu as f where f.user = ?1 and (f.foodname like %?2% or f.description like %?2%) and f.foodtype.foodtypeid = ?3")
+    Page<Foodmenu> findAllByFoodnameContainingOrDescriptionContainingAndFoodtypeAndUser(User user, String searchData, Long foodtypeId, Pageable pageable);
 
     Foodmenu findByUserAndFoodmenuid(User user, Long id);
 
