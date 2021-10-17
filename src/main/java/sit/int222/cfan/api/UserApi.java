@@ -97,8 +97,9 @@ public class UserApi {
     public Page<Foodmenu> foodmenusWithPage(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
-            @RequestParam(defaultValue = "foodmenuid") String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+            @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageUser(userController.getUser(), pageable);
     }
 
@@ -107,8 +108,9 @@ public class UserApi {
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction,
             @RequestParam(defaultValue = "") String searchData) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageSearchUser(userController.getUser(), searchData, pageable);
     }
 
@@ -117,8 +119,9 @@ public class UserApi {
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction,
             @RequestParam(defaultValue = "0") Long foodtypeId) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageFoodtypeUser(userController.getUser(), foodtypeId, pageable);
     }
 
@@ -127,9 +130,10 @@ public class UserApi {
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction,
             @RequestParam(defaultValue = "") String searchData,
             @RequestParam(defaultValue = "0") Long foodtypeId) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageSearchFoodtypeUser(userController.getUser(), searchData, foodtypeId, pageable);
     }
 
@@ -194,6 +198,16 @@ public class UserApi {
     @GetMapping("/request")
     public List<Request> requests() {
         return requestController.findRequestsUser(userController.getUser());
+    }
+
+    @GetMapping("/request/page")
+    public Page<Request> requestsWithPage(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "20") Integer pageSize,
+            @RequestParam(defaultValue = "requestid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
+        return requestController.findPageRequestsUser(userController.getUser(),pageable);
     }
 
     @GetMapping("/request/{id}")

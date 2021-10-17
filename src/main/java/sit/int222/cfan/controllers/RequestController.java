@@ -1,6 +1,8 @@
 package sit.int222.cfan.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sit.int222.cfan.entities.Foodtypereq;
 import sit.int222.cfan.entities.Ingredientsreq;
@@ -23,6 +25,10 @@ public class RequestController {
         return requestRepository.findAll();
     }
 
+    public Page<Request> findPageRequests(Pageable pageable) {
+        return requestRepository.findAll(pageable);
+    }
+
     public Request findById(Long id) {
         Request request = requestRepository.findById(id).orElse(null);
         if (request == null) {
@@ -33,6 +39,10 @@ public class RequestController {
 
     public List<Request> findRequestsUser(User user) {
         return requestRepository.findAllByUser(user);
+    }
+
+    public Page<Request> findPageRequestsUser(User user, Pageable pageable) {
+        return requestRepository.findAllByUser(user, pageable);
     }
 
     public Request findByIdUser(User user, Long id) {

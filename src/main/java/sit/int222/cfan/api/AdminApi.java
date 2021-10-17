@@ -50,8 +50,9 @@ public class AdminApi {
     public Page<User> usersWithPage(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
-            @RequestParam(defaultValue = "userid") String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+            @RequestParam(defaultValue = "userid") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return userController.getUserPage(pageable);
     }
 
@@ -65,8 +66,9 @@ public class AdminApi {
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
-            @RequestParam(defaultValue = "foodmenuid") String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+            @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageUser(userController.getUserById(id), pageable);
     }
 
@@ -89,8 +91,9 @@ public class AdminApi {
     public Page<Foodmenu> foodmenusWithPage(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
-            @RequestParam(defaultValue = "foodmenuid") String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+            @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageAll(pageable);
     }
 
@@ -155,6 +158,16 @@ public class AdminApi {
     @GetMapping("/request")
     public List<Request> requests() {
         return requestController.findAll();
+    }
+
+    @GetMapping("/request/page")
+    public Page<Request> requestsWithPage(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "20") Integer pageSize,
+            @RequestParam(defaultValue = "requestid") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
+        return requestController.findPageRequests(pageable);
     }
 
     @GetMapping("/request/{id}")

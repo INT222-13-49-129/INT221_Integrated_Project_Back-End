@@ -46,8 +46,9 @@ public class GeneralApi {
     public Page<Foodmenu> foodmenusWithPage(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
-            @RequestParam(defaultValue = "foodmenuid") String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+            @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPagePUBLISH(pageable);
     }
 
@@ -56,8 +57,9 @@ public class GeneralApi {
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction,
             @RequestParam(defaultValue = "") String searchData) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageSearchPUBLISH(searchData, pageable);
     }
 
@@ -66,8 +68,9 @@ public class GeneralApi {
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction,
             @RequestParam(defaultValue = "0") Long foodtypeId) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageFoodtypePUBLISH(foodtypeId, pageable);
     }
 
@@ -76,9 +79,10 @@ public class GeneralApi {
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction,
             @RequestParam(defaultValue = "") String searchData,
             @RequestParam(defaultValue = "0") Long foodtypeId) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageSearchFoodtypePUBLISH(searchData, foodtypeId, pageable);
     }
 
@@ -102,9 +106,10 @@ public class GeneralApi {
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "ingredientsid") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction,
             @RequestParam(defaultValue = "") IngredientsType type,
             @RequestParam(defaultValue = "") String searchData) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return ingredientsController.findPage(type, searchData, pageable);
     }
 
