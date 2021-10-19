@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://13.76.27.34:3306/cfandb
+    url: jdbc:mysql://127.20.0.4:3306/cfandb
     username: root
     password: kamin124712
 
@@ -25,6 +25,6 @@ cfan:
   storage:
     location: ./public/img
   origin:
-    host: http://localhost:8080,http://13.76.27.34,http://13.76.27.34:8080
+    host: http://13.76.27.34,http://13.76.27.34:8080
     method: GET,POST,PUT,HEAD,DELETE,PATCH,OPTIONS
     header: Content-Type,Option,Authorization
