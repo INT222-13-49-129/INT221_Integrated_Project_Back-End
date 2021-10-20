@@ -9,7 +9,7 @@ services:
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD=kamin124712
     volumes:
-      - ~/backend_data:/public/product-img
+      - /home/int222/backend_data:/public/img
     networks:
       allnetwork:
         ipv4_address: 172.20.0.3
