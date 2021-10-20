@@ -34,6 +34,7 @@ public class AdminApi {
 
     @PutMapping("/changestatus")
     public User changestatus() {
+        userController.isADMIN();
         User user = userController.changestatus(userController.getUser(), User.Status.NORMAL);
         if (user.getStatus().equals(User.Status.NORMAL)) {
             userController.logout();
@@ -43,6 +44,7 @@ public class AdminApi {
 
     @GetMapping("/user")
     public List<User> users() {
+        userController.isADMIN();
         return userController.getUserAll();
     }
 
@@ -52,12 +54,14 @@ public class AdminApi {
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "userid") String sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        userController.isADMIN();
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return userController.getUserPage(pageable);
     }
 
     @GetMapping("/user/{id}")
     public User user(@PathVariable Long id) {
+        userController.isADMIN();
         return userController.getUserById(id);
     }
 
@@ -68,22 +72,26 @@ public class AdminApi {
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        userController.isADMIN();
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageUser(userController.getUserById(id), pageable);
     }
 
     @GetMapping(value = "/user/{id}/imgprofile", produces = MediaType.IMAGE_PNG_VALUE)
     public Resource userImgProfile(@PathVariable Long id) {
+        userController.isADMIN();
         return userController.getImgProfile(userController.getUserById(id));
     }
 
     @PutMapping("/user/{id}/changestatus")
     public User changestatus(@PathVariable Long id) {
+        userController.isADMIN();
         return userController.changestatus(userController.getUserById(id), User.Status.ADMIN);
     }
 
     @GetMapping("/foodmenu")
     public List<Foodmenu> foodmenus() {
+        userController.isADMIN();
         return foodmenuController.findAll();
     }
 
@@ -93,22 +101,26 @@ public class AdminApi {
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "foodmenuid") String sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        userController.isADMIN();
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return foodmenuController.findPageAll(pageable);
     }
 
     @GetMapping("/foodmenu/{id}")
     public Foodmenu foodmenusWithPage(@PathVariable Long id) {
+        userController.isADMIN();
         return foodmenuController.findById(id);
     }
 
     @GetMapping(value = "/foodmenu/img/{id}", produces = MediaType.IMAGE_PNG_VALUE)
     public Resource foodmenuImg(@PathVariable Long id) {
+        userController.isADMIN();
         return foodmenuController.getfoodmenuImgId(id);
     }
 
     @PostMapping(value = "/foodmenu/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Foodmenu createFoodmenu(@RequestParam(value = "file", required = false) MultipartFile fileImg, @RequestPart Foodmenu newfoodmenu) {
+        userController.isADMIN();
         if (fileImg == null) {
             throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_SUBMITTED_NOT_FOUND, "File : submitted file was not found");
         }
@@ -117,46 +129,55 @@ public class AdminApi {
 
     @PutMapping(value = "/foodmenu/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Foodmenu updateFoodmenu(@RequestParam(value = "file", required = false) MultipartFile fileImg, @RequestPart Foodmenu updatefoodmenu, @PathVariable Long id) {
+        userController.isADMIN();
         return foodmenuController.updateFoodmenuId(fileImg, updatefoodmenu, id);
     }
 
     @DeleteMapping("/foodmenu/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteFoodmenu(@PathVariable Long id) {
+        userController.isADMIN();
         return ResponseEntity.ok(foodmenuController.deleteFoodmenuId(id));
     }
 
     @PostMapping("/ingredients/add")
     public Ingredients createIngredients(@RequestPart Ingredients newingredients) {
+        userController.isADMIN();
         return ingredientsController.createIngredients(newingredients);
     }
 
     @PutMapping(value = "/ingredients/edit/{id}")
     public Ingredients updateIngredients(@RequestPart Ingredients updateingredients, @PathVariable Long id) {
+        userController.isADMIN();
         return ingredientsController.updateIngredients(updateingredients, id);
     }
 
     @DeleteMapping("/ingredients/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteIngredients(@PathVariable Long id) {
+        userController.isADMIN();
         return ResponseEntity.ok(ingredientsController.deleteIngredients(id));
     }
 
     @PostMapping("/foodtype/add")
     public Foodtype createFoodtype(@RequestPart Foodtype newfoodtype) {
+        userController.isADMIN();
         return foodtypeController.createFoodtype(newfoodtype);
     }
 
     @PutMapping(value = "/foodtype/edit/{id}")
     public Foodtype updateFoodtype(@RequestPart Foodtype updatefoodtype, @PathVariable Long id) {
+        userController.isADMIN();
         return foodtypeController.updateFoodtype(updatefoodtype, id);
     }
 
     @DeleteMapping("/foodtype/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteFoodtype(@PathVariable Long id) {
+        userController.isADMIN();
         return ResponseEntity.ok(foodtypeController.deleteFoodtype(id));
     }
 
     @GetMapping("/request")
     public List<Request> requests() {
+        userController.isADMIN();
         return requestController.findAll();
     }
 
@@ -166,27 +187,32 @@ public class AdminApi {
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "requestid") String sortBy,
             @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        userController.isADMIN();
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return requestController.findPageRequests(pageable);
     }
 
     @GetMapping("/request/{id}")
     public Request request(@PathVariable Long id) {
+        userController.isADMIN();
         return requestController.findById(id);
     }
 
     @GetMapping("/request/status")
     public Request.Status[] requestStatus() {
+        userController.isADMIN();
         return requestController.requestStatus();
     }
 
     @PutMapping("/request/changestatus/{id}")
     public Request changestatusRequest(@PathVariable Long id, @RequestPart Request request) {
+        userController.isADMIN();
         return requestController.changestatus(id, request);
     }
 
     @DeleteMapping("/request/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteRequest(@PathVariable Long id) {
+        userController.isADMIN();
         return ResponseEntity.ok(requestController.deleteRequestId(id));
     }
 }

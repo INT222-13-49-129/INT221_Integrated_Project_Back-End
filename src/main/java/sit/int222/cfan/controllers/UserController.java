@@ -70,6 +70,14 @@ public class UserController {
         return getUserById(userid);
     }
 
+    public void isADMIN() {
+        User user = getUser();
+        if (user.getStatus() != User.Status.ADMIN){
+            logout();
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_UNAUTHORIZED, "User : unauthorized !!");
+        }
+    }
+
     public Map<String, Object> createPin(User user, String email) {
         Pin pin = pinService.createPin(user, email);
         HashMap<String, Object> map = new HashMap<>();
