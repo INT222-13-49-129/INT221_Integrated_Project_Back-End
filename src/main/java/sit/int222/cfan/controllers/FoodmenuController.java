@@ -165,14 +165,14 @@ public class FoodmenuController {
 
     public Foodmenu updateFoodmenu(Foodmenu foodmenu, MultipartFile fileImg, Foodmenu updatefoodmenu) {
         if (updatefoodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PUBLISH)) {
-            if (foodmenuRepository.findByFoodnameAndFoodmenustatus(updatefoodmenu.getFoodname(), Foodmenu.FoodmenuStatus.PUBLISH) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
+            if (foodmenuRepository.findByFoodnameAndFoodmenustatus(updatefoodmenu.getFoodname(), Foodmenu.FoodmenuStatus.PUBLISH) != null && !(updatefoodmenu.getFoodname().equals(foodmenu.getFoodname()) && foodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PUBLISH))) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PUBLISH_ALREADY_EXIST, "Foodmenu :Foodname {" + updatefoodmenu.getFoodname() + "} does already exist !!");
             }
         } else {
             if (foodmenu.getUser() == null) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.USER_IS_NULL, "User :User cannot be null if this is a personal!!");
             }
-            if (foodmenuRepository.findByUserAndFoodname(foodmenu.getUser(), updatefoodmenu.getFoodname()) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
+            if (foodmenuRepository.findByUserAndFoodname(foodmenu.getUser(), updatefoodmenu.getFoodname()) != null && !(updatefoodmenu.getFoodname().equals(foodmenu.getFoodname()) && foodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PERSONAL))) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PERSONAL_ALREADY_EXIST, "Foodmenu :Foodname {" + updatefoodmenu.getFoodname() + "} does already exist !!");
             }
         }
