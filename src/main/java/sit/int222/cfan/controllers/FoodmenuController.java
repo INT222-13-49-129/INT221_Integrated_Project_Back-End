@@ -55,9 +55,9 @@ public class FoodmenuController {
     }
 
     public Page<Foodmenu> findPageSearchPUBLISH(String search, Pageable pageable) {
-        search = search.replace("\\","\\\\");
-        search = search.replace("_","\\_");
-        search = search.replace("%","\\%");
+        search = search.replace("\\", "\\\\");
+        search = search.replace("_", "\\_");
+        search = search.replace("%", "\\%");
         return foodmenuRepository.findSearch(Foodmenu.FoodmenuStatus.PUBLISH, search, pageable);
     }
 
@@ -66,9 +66,9 @@ public class FoodmenuController {
     }
 
     public Page<Foodmenu> findPageSearchFoodtypePUBLISH(String search, Long foodtypeId, Pageable pageable) {
-        search = search.replace("\\","\\\\");
-        search = search.replace("_","\\_");
-        search = search.replace("%","\\%");
+        search = search.replace("\\", "\\\\");
+        search = search.replace("_", "\\_");
+        search = search.replace("%", "\\%");
         return foodmenuRepository.findSearchFoodtype(Foodmenu.FoodmenuStatus.PUBLISH, search, foodtypeId, pageable);
     }
 
@@ -89,9 +89,9 @@ public class FoodmenuController {
     }
 
     public Page<Foodmenu> findPageSearchUser(User user, String search, Pageable pageable) {
-        search = search.replace("\\","\\\\");
-        search = search.replace("_","\\_");
-        search = search.replace("%","\\%");
+        search = search.replace("\\", "\\\\");
+        search = search.replace("_", "\\_");
+        search = search.replace("%", "\\%");
         return foodmenuRepository.findAllByFoodnameContainingOrDescriptionContainingAndUser(user, search, pageable);
     }
 
@@ -100,9 +100,9 @@ public class FoodmenuController {
     }
 
     public Page<Foodmenu> findPageSearchFoodtypeUser(User user, String search, Long foodtypeId, Pageable pageable) {
-        search = search.replace("\\","\\\\");
-        search = search.replace("_","\\_");
-        search = search.replace("%","\\%");
+        search = search.replace("\\", "\\\\");
+        search = search.replace("_", "\\_");
+        search = search.replace("%", "\\%");
         return foodmenuRepository.findAllByFoodnameContainingOrDescriptionContainingAndFoodtypeAndUser(user, search, foodtypeId, pageable);
     }
 
@@ -172,7 +172,7 @@ public class FoodmenuController {
             if (foodmenu.getUser() == null) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.USER_IS_NULL, "User :User cannot be null if this is a personal!!");
             }
-            if (foodmenuRepository.findByUserAndFoodname(foodmenu.getUser(), updatefoodmenu.getFoodname()) != null && !(updatefoodmenu.getFoodname().equals(foodmenu.getFoodname()) && foodmenu.getFoodmenustatus().equals(Foodmenu.FoodmenuStatus.PERSONAL))) {
+            if (foodmenuRepository.findByUserAndFoodname(foodmenu.getUser(), updatefoodmenu.getFoodname()) != null && !updatefoodmenu.getFoodname().equals(foodmenu.getFoodname())) {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FOODMENU_FOODNAME_PERSONAL_ALREADY_EXIST, "Foodmenu :Foodname {" + updatefoodmenu.getFoodname() + "} does already exist !!");
             }
         }
