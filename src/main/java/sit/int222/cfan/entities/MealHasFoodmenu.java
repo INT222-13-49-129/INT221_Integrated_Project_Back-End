@@ -18,6 +18,7 @@ public class MealHasFoodmenu {
     @JoinColumn(name = "Meal_Mealid")
     private Meal meal;
 
+    @JsonBackReference(value = "foodmenu-mealhasfoodmenu")
     @ManyToOne
     @MapsId("foodmenuFoodmenuid")
     @JoinColumn(name = "Foodmenu_Foodmenuid")
