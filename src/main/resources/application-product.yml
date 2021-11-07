@@ -25,6 +25,6 @@ cfan:
   storage:
     location: ./public/img
   origin:
-    host: http://13.76.27.34,http://13.76.27.34:8080
+    host: https://cfan.ddns.net/
     method: GET,POST,PUT,HEAD,DELETE,PATCH,OPTIONS
     header: Content-Type,Option,Authorization
