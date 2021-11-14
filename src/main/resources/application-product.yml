@@ -25,6 +25,6 @@ cfan:
   storage:
     location: ./public/img
   origin:
-    host: https://cfan.ddns.net/
+    host: https://cfan.ddnsking.com/
     method: GET,POST,PUT,HEAD,DELETE,PATCH,OPTIONS
     header: Content-Type,Option,Authorization
