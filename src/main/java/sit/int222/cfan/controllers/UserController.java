@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import sit.int222.cfan.entities.Foodmenu;
 import sit.int222.cfan.entities.Jwtblacklist;
 import sit.int222.cfan.entities.Pin;
 import sit.int222.cfan.entities.User;
@@ -23,10 +24,7 @@ import sit.int222.cfan.util.SecurityUtil;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserController {
@@ -42,6 +40,8 @@ public class UserController {
     StorageService storageService;
     @Autowired
     PinService pinService;
+    @Autowired
+    FoodmenuController foodmenuController;
 
     public List<User> getUserAll() {
         return userRepository.findAll();
@@ -319,6 +319,12 @@ public class UserController {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_DELETE, "File : file cannot delete !!");
             }
         }
+        ListIterator<Foodmenu> iterator = user.getFoodmenus().listIterator();
+        while (iterator.hasNext()){
+            Foodmenu foodmenu = iterator.next();
+            foodmenuController.deleteFoodmenu(foodmenu);
+        }
+        user.setFoodmenus(null);
         userRepository.delete(user);
         HashMap<String, Boolean> map = new HashMap<>();
         map.put("success", true);
