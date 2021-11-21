@@ -29,7 +29,7 @@ pipeline {
         stage('git clone') {
             steps {
                 git branch: 'master',
-                    credentialsId: 'int222',
+                    credentialsId: 'INT222CFAN',
                     url: 'https://github.com/INT222-13-49-129/INT222_Integrated_Project_Back-End.git'
             }
         }
