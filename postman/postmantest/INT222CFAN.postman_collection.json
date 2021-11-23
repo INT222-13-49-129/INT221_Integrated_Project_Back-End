@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "536a2df8-fd1e-42c7-9fc1-bab1264f15bb",
+		"name": "INT222CFAN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Resource",
+			"item": [
+				{
+					"name": "Login Token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"MyURL\", \"https://cfan.ddnsking.com\")"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"token???\", function(){\r",
+									"    pm.response.to.have.jsonBody(\"token\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.environment.set(\"token\", pm.response.json().token);\r",
+									"console.log(\"token: \"+pm.environment.get(\"token\"))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "login",
+									"type": "file",
+									"src": "postman/postmandata/login_token.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{MyURL}}/backend/api/general/login",
+							"host": [
+								"{{MyURL}}"
+							],
+							"path": [
+								"backend",
+								"api",
+								"general",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Test",
+			"item": [
+				{
+					"name": "GET User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{MyURL}}/backend/api/user",
+							"host": [
+								"{{MyURL}}"
+							],
+							"path": [
+								"backend",
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Foodmenu",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{MyURL}}/backend/api/user/foodmenu",
+							"host": [
+								"{{MyURL}}"
+							],
+							"path": [
+								"backend",
+								"api",
+								"user",
+								"foodmenu"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

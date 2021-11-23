@@ -44,5 +44,14 @@ pipeline {
             }
         }
 
+        stage('test') {
+            steps {
+                sh 'node --version '
+                sh 'npm --version '
+                sh 'npm install -g newman'
+                sh 'newman run postman/postmantest/INT222CFAN.postman_collection.json'
+            }
+        }
+
     }
 }
