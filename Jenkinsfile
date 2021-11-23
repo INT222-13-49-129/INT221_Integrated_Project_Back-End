@@ -1,6 +1,10 @@
 pipeline {
     agent any
-
+    
+    tools {
+        nodejs "nodejs"
+    }
+    
     stages {
 
         stage('stop and remove container, image') {
