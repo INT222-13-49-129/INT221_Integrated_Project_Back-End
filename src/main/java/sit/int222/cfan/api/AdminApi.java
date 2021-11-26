@@ -106,6 +106,18 @@ public class AdminApi {
         return foodmenuController.findPageAll(pageable);
     }
 
+    @GetMapping("/foodmenu/page/search/foodtype")
+    public Page<Foodmenu> foodmenusWithPageSearchFoodtype(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "20") Integer pageSize,
+            @RequestParam(defaultValue = "foodmenuid") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction,
+            @RequestParam(defaultValue = "") String searchData,
+            @RequestParam(defaultValue = "0") Long foodtypeId) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
+        return foodmenuController.findPageSearchFoodtypeAll(searchData, foodtypeId, pageable);
+    }
+
     @GetMapping("/foodmenu/{id}")
     public Foodmenu foodmenusWithPage(@PathVariable Long id) {
         userController.isADMIN();

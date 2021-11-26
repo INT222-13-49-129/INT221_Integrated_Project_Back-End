@@ -20,6 +20,12 @@ public interface FoodmenuRepository extends JpaRepository<Foodmenu, Long> {
     @Query("select f from Foodmenu as f where f.foodmenustatus = ?1 and f.foodtype.foodtypeid = ?2")
     Page<Foodmenu> findAllByFoodtypeId(Foodmenu.FoodmenuStatus foodmenuStatus, Long foodtypeId, Pageable pageable);
 
+    @Query(value = "SELECT f FROM Foodmenu as f where f.foodname like %?1% or f.description like %?1%")
+    Page<Foodmenu> findSearchAll(String searchData, Pageable pageable);
+
+    @Query(value = "SELECT f FROM Foodmenu as f where (f.foodname like %?1% or f.description like %?1%) and f.foodtype.foodtypeid = ?2")
+    Page<Foodmenu> findSearchFoodtypeAll(String searchData, Long foodtypeId, Pageable pageable);
+
     @Query(value = "SELECT f FROM Foodmenu as f where f.foodmenustatus = ?1 and (f.foodname like %?2% or f.description like %?2%) and f.foodtype.foodtypeid = ?3")
     Page<Foodmenu> findSearchFoodtype(Foodmenu.FoodmenuStatus foodmenuStatus, String searchData, Long foodtypeId, Pageable pageable);
 

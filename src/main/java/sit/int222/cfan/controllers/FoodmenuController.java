@@ -38,6 +38,16 @@ public class FoodmenuController {
         return foodmenuRepository.findAll(pageable);
     }
 
+    public Page<Foodmenu> findPageSearchFoodtypeAll(String search, Long foodtypeId, Pageable pageable) {
+        search = search.replace("\\", "\\\\");
+        search = search.replace("_", "\\_");
+        search = search.replace("%", "\\%");
+        if(foodtypeId == 0){
+            return foodmenuRepository.findSearchAll(search, pageable);
+        }
+        return foodmenuRepository.findSearchFoodtypeAll(search, foodtypeId, pageable);
+    }
+
     public Foodmenu findById(Long id) {
         Foodmenu foodmenu = foodmenuRepository.findById(id).orElse(null);
         if (foodmenu == null) {
