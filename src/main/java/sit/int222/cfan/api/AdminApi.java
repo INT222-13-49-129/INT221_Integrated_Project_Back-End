@@ -198,7 +198,7 @@ public class AdminApi {
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "requestid") String sortBy,
-            @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction) {
         userController.isADMIN();
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(direction,sortBy));
         return requestController.findPageRequests(pageable);
