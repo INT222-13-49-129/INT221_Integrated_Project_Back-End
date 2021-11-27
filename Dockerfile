@@ -1,10 +1,6 @@
 FROM maven:3.6.1-jdk-11-slim AS build
 COPY src /workspace/src
 COPY pom.xml /workspace
-RUN date
-RUN apk add tzdata
-RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
-RUN date
 WORKDIR /workspace
 RUN mvn clean install
 
