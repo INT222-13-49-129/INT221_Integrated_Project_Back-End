@@ -29,7 +29,7 @@ public class User {
     private double weight;
     private double height;
 
-    @Column(columnDefinition = "ENUM('NORMAL', 'ADMIN')")
+    @Column(columnDefinition = "ENUM('NORMAL', 'ADMIN', 'TBC')")
     @Enumerated(EnumType.STRING)
     private Status status;
     private String image;
