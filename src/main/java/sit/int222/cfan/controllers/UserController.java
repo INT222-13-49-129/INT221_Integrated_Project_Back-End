@@ -298,20 +298,7 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    public Map<String, Boolean> deleteUser(DeleteUserModel deleteuser) {
-        User user = getUser();
-        if (user.getUserid() != deleteuser.getUserid()) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID, "User : id {" + deleteuser.getUserid() + "}  incorrect user id !!");
-        }
-        if (!user.getEmail().equals(deleteuser.getEmail())) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_INCORRECT, "User : Email {" + deleteuser.getEmail() + "} incorrect!!");
-        }
-        if (!user.getUsername().equals(deleteuser.getUsername())) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_USERNAME_INCORRECT, "User : Username {" + deleteuser.getUsername() + "} incorrect!!");
-        }
-        if (!passwordEncoder.matches(deleteuser.getPassword(), user.getPassword())) {
-            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
-        }
+    public Map<String, Boolean> delete(User user) {
         if (user.getImage() != null) {
             try {
                 storageService.delete(user.getImage());
@@ -330,6 +317,30 @@ public class UserController {
         map.put("success", true);
         return map;
     }
+
+
+    public Map<String, Boolean> deleteUser(DeleteUserModel deleteuser) {
+        User user = getUser();
+        if (user.getUserid() != deleteuser.getUserid()) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_INCORRECT_ID, "User : id {" + deleteuser.getUserid() + "}  incorrect user id !!");
+        }
+        if (!user.getEmail().equals(deleteuser.getEmail())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_EMAIL_INCORRECT, "User : Email {" + deleteuser.getEmail() + "} incorrect!!");
+        }
+        if (!user.getUsername().equals(deleteuser.getUsername())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_USERNAME_INCORRECT, "User : Username {" + deleteuser.getUsername() + "} incorrect!!");
+        }
+        if (!passwordEncoder.matches(deleteuser.getPassword(), user.getPassword())) {
+            throw new BaseException(ExceptionResponse.ERROR_CODE.USER_PASSWORD_INCORRECT, "User : password incorrect !!");
+        }
+        return delete(user);
+    }
+
+    public Map<String, Boolean> deleteUserAdmin(Long userid) {
+        User user = getUserById(userid);
+        return delete(user);
+    }
+
 
     public User changestatus(User user, User.Status status) {
         user.setStatus(status);

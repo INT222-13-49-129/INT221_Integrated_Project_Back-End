@@ -89,6 +89,12 @@ public class AdminApi {
         return userController.changestatus(userController.getUserById(id), User.Status.ADMIN);
     }
 
+    @DeleteMapping("/user/{id}/delete")
+    public Map<String, Boolean> deleteUser(@PathVariable Long id) {
+        userController.isADMIN();
+        return userController.deleteUserAdmin(id);
+    }
+
     @GetMapping("/foodmenu")
     public List<Foodmenu> foodmenus() {
         userController.isADMIN();
