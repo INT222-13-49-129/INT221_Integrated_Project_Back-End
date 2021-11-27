@@ -168,7 +168,7 @@ public class GeneralApi {
     private MealRepository mealRepository;
 
     @GetMapping("/{date}")
-    public List<Meal> mealDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    public List<Meal> mealDate(@PathVariable("date")String date) {
         return  mealRepository.findByDatemeal(Date.valueOf(date));
     }
 
