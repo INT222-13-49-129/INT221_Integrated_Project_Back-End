@@ -5,6 +5,7 @@ import sit.int222.cfan.entities.Meal;
 import sit.int222.cfan.entities.User;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MealRepository extends JpaRepository<Meal, Long> {
