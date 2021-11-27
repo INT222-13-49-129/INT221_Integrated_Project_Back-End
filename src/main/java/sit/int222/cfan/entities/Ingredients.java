@@ -25,7 +25,7 @@ public class Ingredients {
     private IngredientsType ingredientstype;
 
     @JsonBackReference(value = "foodmenuHasIngredientsList")
-    @OneToMany(mappedBy = "ingredients", orphanRemoval = true)
+    @OneToMany(mappedBy = "ingredients")
     private List<FoodmenuHasIngredients> foodmenuHasIngredientsList;
 
 }

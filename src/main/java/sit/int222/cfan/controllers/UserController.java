@@ -8,10 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import sit.int222.cfan.entities.Foodmenu;
-import sit.int222.cfan.entities.Jwtblacklist;
-import sit.int222.cfan.entities.Pin;
-import sit.int222.cfan.entities.User;
+import sit.int222.cfan.entities.*;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
 import sit.int222.cfan.models.*;
@@ -42,6 +39,8 @@ public class UserController {
     PinService pinService;
     @Autowired
     FoodmenuController foodmenuController;
+    @Autowired
+    private MealController mealController;
 
     public long getCountUser() {
         return userRepository.count();
@@ -310,10 +309,15 @@ public class UserController {
                 throw new BaseException(ExceptionResponse.ERROR_CODE.FILE_CAN_NOT_DELETE, "File : file cannot delete !!");
             }
         }
-        ListIterator<Foodmenu> iterator = user.getFoodmenus().listIterator();
-        while (iterator.hasNext()){
-            Foodmenu foodmenu = iterator.next();
+        ListIterator<Foodmenu> iteratorF = user.getFoodmenus().listIterator();
+        while (iteratorF.hasNext()){
+            Foodmenu foodmenu = iteratorF.next();
             foodmenuController.deleteFoodmenu(foodmenu);
+        }
+        ListIterator<Meal> iteratorM = user.getMeals().listIterator();
+        while (iteratorM.hasNext()){
+            Meal meal = iteratorM.next();
+            mealController.deleteMeal(user,meal.getMealid());
         }
         user.setFoodmenus(null);
         userRepository.delete(user);

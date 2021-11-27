@@ -14,6 +14,7 @@ import sit.int222.cfan.exceptions.ExceptionResponse;
 import sit.int222.cfan.repositories.FoodmenuHasIngredientsRepository;
 import sit.int222.cfan.repositories.FoodmenuRepository;
 import sit.int222.cfan.repositories.IngredientsRepository;
+import sit.int222.cfan.repositories.MealHasFoodmenuRepository;
 import sit.int222.cfan.services.StorageService;
 
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class FoodmenuController {
     private FoodmenuRepository foodmenuRepository;
     @Autowired
     private FoodmenuHasIngredientsRepository foodmenuHasIngredientsRepository;
+    @Autowired
+    private MealHasFoodmenuRepository mealHasFoodmenuRepository;
     @Autowired
     private IngredientsRepository ingredientsRepository;
     @Autowired
@@ -223,6 +226,7 @@ public class FoodmenuController {
     public Map<String, Boolean> deleteFoodmenu(Foodmenu foodmenu) {
         try {
             foodmenuHasIngredientsRepository.deleteAll(foodmenu.getFoodmenuHasIngredientsList());
+            mealHasFoodmenuRepository.deleteAll(foodmenu.getMealHasFoodmenuList());
             storageService.delete(foodmenu.getImage());
             foodmenuRepository.delete(foodmenu);
         } catch (IOException e) {

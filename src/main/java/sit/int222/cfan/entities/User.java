@@ -35,11 +35,11 @@ public class User {
     private String image;
 
     @JsonBackReference(value = "foodmenus")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Foodmenu> foodmenus;
 
     @JsonBackReference(value = "meals")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Meal> meals;
 
     @JsonBackReference(value = "requests")
