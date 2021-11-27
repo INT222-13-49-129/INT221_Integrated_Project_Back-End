@@ -1,8 +1,4 @@
 FROM maven:3.6.1-jdk-11-slim AS build
-RUN date
-RUN apk add tzdata
-RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
-RUN date
 COPY src /workspace/src
 COPY pom.xml /workspace
 WORKDIR /workspace
