@@ -164,12 +164,5 @@ public class GeneralApi {
         return userController.login(login);
     }
 
-    @Autowired
-    private MealRepository mealRepository;
-
-    @GetMapping("/{date}")
-    public List<Meal> mealDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return  mealRepository.findByDatemeal(Date.valueOf(date));
-    }
 
 }

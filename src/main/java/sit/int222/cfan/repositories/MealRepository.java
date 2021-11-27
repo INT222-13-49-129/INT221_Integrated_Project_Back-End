@@ -5,7 +5,6 @@ import sit.int222.cfan.entities.Meal;
 import sit.int222.cfan.entities.User;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 public interface MealRepository extends JpaRepository<Meal, Long> {
@@ -14,6 +13,4 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
     Meal findByUserAndMealid(User user, Long id);
 
     List<Meal> findByUserAndDatemeal(User user, Date date);
-
-    List<Meal> findByDatemeal(Date date);
 }
