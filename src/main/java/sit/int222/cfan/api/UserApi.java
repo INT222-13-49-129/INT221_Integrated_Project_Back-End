@@ -177,7 +177,6 @@ public class UserApi {
 
     @GetMapping("/meal/date/{date}")
     public List<Meal> mealDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        System.out.println(date);
         return mealController.findByDateUser(userController.getUser(), Date.valueOf(date));
     }
 
