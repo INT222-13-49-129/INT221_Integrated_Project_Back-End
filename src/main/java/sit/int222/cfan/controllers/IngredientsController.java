@@ -27,6 +27,10 @@ public class IngredientsController {
     @Autowired
     private FoodmenuController foodmenuController;
 
+    public long getCountIngredients() {
+        return ingredientsRepository.count();
+    }
+
     public List<Ingredients> findAll() {
         return ingredientsRepository.findAll();
     }

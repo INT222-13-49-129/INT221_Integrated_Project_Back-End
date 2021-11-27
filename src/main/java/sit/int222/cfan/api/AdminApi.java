@@ -15,6 +15,7 @@ import sit.int222.cfan.entities.*;
 import sit.int222.cfan.exceptions.BaseException;
 import sit.int222.cfan.exceptions.ExceptionResponse;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,18 @@ public class AdminApi {
     private FoodtypeController foodtypeController;
     @Autowired
     private RequestController requestController;
+
+    @GetMapping("/all")
+    public ResponseEntity<Map<String, Object>> allInformation() {
+        userController.isADMIN();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("user", userController.getCountUser());
+        map.put("foodmenu", foodmenuController.getCountFoodmenu());
+        map.put("ingredients", ingredientsController.getCountIngredients());
+        map.put("foodtype", foodtypeController.getCountFoodtype());
+        map.put("request", requestController.getCountRequest());
+        return ResponseEntity.ok(map);
+    }
 
     @PutMapping("/changestatus")
     public User changestatus() {

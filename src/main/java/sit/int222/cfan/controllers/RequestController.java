@@ -21,6 +21,10 @@ public class RequestController {
     @Autowired
     RequestRepository requestRepository;
 
+    public long getCountRequest() {
+        return requestRepository.count();
+    }
+
     public List<Request> findAll() {
         return requestRepository.findAll();
     }

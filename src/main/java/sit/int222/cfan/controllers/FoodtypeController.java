@@ -20,6 +20,10 @@ public class FoodtypeController {
     @Autowired
     private FoodmenuController foodmenuController;
 
+    public long getCountFoodtype() {
+        return foodtypeRepository.count();
+    }
+
     public List<Foodtype> findAll() {
         return foodtypeRepository.findAll();
     }

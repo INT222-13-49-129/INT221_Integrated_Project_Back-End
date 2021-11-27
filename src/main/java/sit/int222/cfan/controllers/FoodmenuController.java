@@ -30,6 +30,10 @@ public class FoodmenuController {
     @Autowired
     StorageService storageService;
 
+    public long getCountFoodmenu() {
+        return foodmenuRepository.count();
+    }
+
     public List<Foodmenu> findAll() {
         return foodmenuRepository.findAll();
     }

@@ -43,6 +43,10 @@ public class UserController {
     @Autowired
     FoodmenuController foodmenuController;
 
+    public long getCountUser() {
+        return userRepository.count();
+    }
+
     public List<User> getUserAll() {
         return userRepository.findAll();
     }
