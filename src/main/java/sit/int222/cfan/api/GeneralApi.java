@@ -19,6 +19,7 @@ import sit.int222.cfan.models.LoginModel;
 import sit.int222.cfan.models.LoginResponseModel;
 import sit.int222.cfan.models.PinModel;
 import sit.int222.cfan.models.RegisterModel;
+import sit.int222.cfan.repositories.MealRepository;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -163,9 +164,12 @@ public class GeneralApi {
         return userController.login(login);
     }
 
+    @Autowired
+    private MealRepository mealRepository;
+
     @GetMapping("/{date}")
-    public Date mealDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return  Date.valueOf(date);
+    public List<Meal> mealDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        return  mealRepository.findByDatemeal(Date.valueOf(date));
     }
 
 }
