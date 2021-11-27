@@ -36,7 +36,7 @@ public class Foodmenu {
     private List<FoodmenuHasIngredients> foodmenuHasIngredientsList;
 
     @JsonBackReference(value = "mealHasFoodmenuList")
-    @OneToMany(mappedBy = "foodmenu", orphanRemoval = true)
+    @OneToMany(mappedBy = "foodmenu", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<MealHasFoodmenu> mealHasFoodmenuList;
 
     public enum FoodmenuStatus {

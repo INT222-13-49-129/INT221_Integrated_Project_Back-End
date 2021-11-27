@@ -24,7 +24,7 @@ public class Meal {
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "meal" ,orphanRemoval = true)
+    @OneToMany(mappedBy = "meal" , cascade = CascadeType.ALL,orphanRemoval = true)
     private List<MealHasFoodmenu> mealHasFoodmenuList;
 
     public enum MealTime {
