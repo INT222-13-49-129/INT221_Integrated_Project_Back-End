@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://172.20.0.4:3306/cfandb
+    url: jdbc:mysql://172.20.0.4:3306/cfandb?serverTimezone=UTC
     username: root
     password: kamin124712
 
