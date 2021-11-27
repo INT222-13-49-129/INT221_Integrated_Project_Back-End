@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +14,14 @@ import sit.int222.cfan.controllers.FoodmenuController;
 import sit.int222.cfan.controllers.FoodtypeController;
 import sit.int222.cfan.controllers.IngredientsController;
 import sit.int222.cfan.controllers.UserController;
-import sit.int222.cfan.entities.Foodmenu;
-import sit.int222.cfan.entities.Foodtype;
-import sit.int222.cfan.entities.Ingredients;
-import sit.int222.cfan.entities.IngredientsType;
+import sit.int222.cfan.entities.*;
 import sit.int222.cfan.models.LoginModel;
 import sit.int222.cfan.models.LoginResponseModel;
 import sit.int222.cfan.models.PinModel;
 import sit.int222.cfan.models.RegisterModel;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -161,6 +161,11 @@ public class GeneralApi {
     @PostMapping("/login")
     public LoginResponseModel login(@RequestPart LoginModel login) {
         return userController.login(login);
+    }
+
+    @GetMapping("/{date}")
+    public Date mealDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        return  Date.valueOf(date);
     }
 
 }
