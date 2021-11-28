@@ -15,7 +15,7 @@ import java.util.TimeZone;
 public class CfanApplication {
     @PostConstruct
     void started() {
-        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Bangkok"));
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
     public static void main(String[] args) {
